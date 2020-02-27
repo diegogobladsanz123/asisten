@@ -1,0 +1,123 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Cursos {{#btnAdd user.rol_crear '/curso/create/'}}{{/btnAdd}}</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="ui unstackable blue celled selectable table" id="table_curso">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Extension</th>
+                                        <th>Jornada</th>
+                                        <th>Nivel</th>
+                                        <th>Curso</th>
+                                        <th>Tutor</th>
+                                        <th>Materias</th>
+                                        <th width="80px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    {{#each row}}
+                                    <tr {{#ifeq cur_estado 0}}class="error" {{/ifeq}}>
+                                        <td>{{idcurso}}</td>
+                                        <td>{{niv_extension}}</td>
+                                        <td>{{niv_jornada}}</td>
+                                        <td>{{niv_nivel}}</td>
+                                        <td><span class="ui teal tag label">{{cur_curso}}</span> </td>
+                                        <td>
+                                            {{#each ../tutores}}
+                                            {{#ifeq ../idcurso curso_idcurso}}{{../fun_nombres}}{{/ifeq}}
+
+                                            {{/each}}
+                                        </td>
+                                        <td>
+                                            {{#each ../mhc}}
+                                            {{#ifeq ../idcurso curso_idcurso}}
+                                            <span class="ui mini label">{{../mat_nombre}}</span>
+                                            {{/ifeq}}
+                                            {{/each}}
+                                        </td>
+                                        <td>
+                                            {{#btnEdit ../user.rol_editar '/curso/edit/' idcurso}}{{/btnEdit}}
+
+                                            {{#btnDelete ../user.rol_eliminar idcurso cur_estado }}{{/btnDelete}}
+
+
+                                            {{!-- {{#btnPrint ../user.rol_imprimir '/users' iduser }}{{/btnPrint}}
+                                                                {{#btnShow 1 '/users' iduser }}{{/btnShow}} --}}
+
+
+                                            <div class="modal fade" id="modal-delete-{{idcurso}}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header alert-danger">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title">Desactivar curso</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            El curso <code>{{cur_curso}}</code> sera desactivado.
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Cancelar</button>
+                                                            <a href="/curso/curso/delete/{{idcurso}}"
+                                                                class="btn btn-danger">Continuar</a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $('#table_curso').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+    })
+</script>

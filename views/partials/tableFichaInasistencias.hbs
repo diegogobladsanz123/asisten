@@ -1,0 +1,272 @@
+<table class="ui table compact selectable small" id="tbl_alumnos">
+    <thead>
+        <tr>
+            <th>id.</th>
+            <th>Fecha</th>
+            {{#ifeq ficha 1}}
+            {{else}}
+            <th>Curso</th>
+            <th>Alumno</th>
+            {{/ifeq}}
+            <th>Materia</th>
+            <th>Motivo</th>
+            <th>Est.</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each inasistencias}}
+
+        <tr {{#ifeq justificada 1}} class="positive" {{/ifeq}}{{#ifeq ina_estado 0}}class="negative" {{/ifeq}}>
+            <td>{{idinasistencia}}</td>
+            <td>{{ina_fecha}}</td>
+            {{#ifeq ../ficha 1}}
+            {{else}}
+            <td>{{../curso}}</td>
+            <td>
+                <a href="/alumnos/ficha/{{../idalumno}}"><i class="fa fa-arrow-alt-circle-right"></i>
+                    {{../alu_apellidos_nombres}}</a>
+            </td>
+            {{/ifeq}}
+            <td>{{materia}}</td>
+            <td>
+                {{#ifeq justificada 0}}
+                {{../ina_injust_comment}}
+                {{/ifeq}}
+                {{#ifeq justificada 1}}
+                {{../ina_just_comment}}
+                {{/ifeq}}
+            </td>
+
+            <td>
+
+
+                {{#ifeq ina_estado 1}}
+                {{#ifeq ../justificada 0}}
+                <a class="fa fa-minus-circle text-red negative" data-toggle="modal"
+                    href='#modal-{{../idinasistencia}}'></a>
+                {{else}}
+                <a class="fa fa-check-circle text-green negative" data-toggle="modal"
+                    href='#modal-{{../idinasistencia}}'></a>
+                {{/ifeq}}
+                {{else}}
+                <a class="fa fa-times text-red negative" data-toggle="modal" href='#modal-{{../idinasistencia}}'></a>
+                {{/ifeq}}
+
+
+                <div class="modal fade" id="modal-{{idinasistencia}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Detalle inasistencia</h4>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <ul>
+
+
+                                    {{#ifeq justificada 1}}
+                                    <li><b>Estado:</b> Justificada</li>
+                                    <li><b>Materia:</b> {{../materia}}</li>
+                                    <li><b>Fecha justificación:</b> {{../ina_just_fecha}}</li>
+                                    <li><b>Motivo inasistencia:</b> {{../ina_injust_comment}}</li>
+                                    <br>
+                                    <small>
+                                        <p>
+                                            <b>Justificada por:</b> <br>
+                                            {{../updated_fullname}} <br>
+                                            <b>Motivo justificación:</b> <br>{{../ina_just_comment}}
+                                        </p>
+                                    </small>
+                                    {{else}}
+                                    <li><b>Estado:</b> Injustificada</li>
+                                    <li><b>Materia:</b> {{../materia}}</li>
+                                    <li><b>Fecha inasistencia:</b> {{../ina_fecha}}</li>
+                                    <li><b>Motivo inasistencia:</b> {{../ina_injust_comment}}</li>
+                                    <br>
+                                    {{/ifeq}}
+
+                                    {{#ifeq ina_estado 0}}
+                                    <small>
+                                        <p>
+                                            <b>Eliminado por:</b> <br>{{../updated_fullname}} <br>
+                                            <b>Motivo:</b> <br>{{../del_comment}}
+                                        </p>
+                                    </small>
+                                    {{/ifeq}}
+
+                                    <small>
+                                        <p><b>Registrado por:</b> <br>{{user_fullname}}</p>
+                                    </small>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+
+            <td>
+                {{#ifeq justificada 0}}
+
+                {{#btnJustificarInasisencia ../../user.justificarInasistencia '#modal-justificar-' ../idinasistencia ../ina_estado ../../anio_state}}{{/btnJustificarInasisencia}}
+
+                {{#ifeq ../user_iduser ../../user.iduser}}
+                {{#btnDelInasistencia ../../user.delInasistencia '#modal-delete-' ../idinasistencia ../ina_estado ../../anio_state}}{{/btnDelInasistencia}}
+                {{/ifeq}}
+
+
+
+
+                <!-- TODO::modal justificacion -->
+                <div class="modal fade" id="modal-justificar-{{../idinasistencia}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header alert-success">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Justificar falta</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="field">
+                                    <label for="">Resumen de la información:</label>
+                                </div>
+
+                                <ul>
+                                    <li>{{../alu_apellidos_nombres}}</li>
+                                    <li>{{../ina_fecha}}</li>
+                                    <li>{{../materia}}</li>
+                                </ul>
+                                <form action="/inspeccion/faltas/justificar" class="ui form"
+                                    id="form-justificar-{{../idinasistencia}}" method="post">
+                                    <div class="col-md-11">
+                                        <input type="hidden" name="idinasistencia" value="{{../idinasistencia}}">
+                                    </div>
+
+                                    <div class="col-md-11">
+                                        <div class="field">
+                                            <label for="">Fecha</label>
+                                            <input type="date" name="ina_just_fecha">
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label for="">Comentario:</label>
+
+                                        <textarea name="ina_just_comment" style="width:95%" rows="2"></textarea>
+
+                                    </div>
+                                    <div class=" ui error message"></div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Continuar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        function clearForm(id) {
+                            console.log(`#form-justificar-${id}`);
+                            $(`#form-justificar-${id}`).form('reset');
+                        }
+                        $(() => {
+                            $(`#form-justificar-{{../idinasistencia}}`).form({
+                                fields: {
+                                    ina_just_comment: {
+                                        identifier: 'ina_just_comment',
+                                        rules: [{ type: 'empty', prompt: 'El comentario es obligatorio.' }]
+                                    },
+                                    ina_just_fecha: {
+                                        identifier: 'ina_just_fecha',
+                                        rules: [{ type: 'empty', prompt: 'Seleccione la fecha.' }]
+                                    }
+                                }, onSuccess: function (e) {
+                                    e.submit();
+                                }
+                            })
+                        });
+                        /**/
+
+                        $(() => {
+
+                            $(`#form_falta_{{idalumno}}`).form({
+                                fields: {
+                                    idmateria: {
+                                        identifier: "idmateria",
+                                        rules: [{ type: "empty", prompt: 'Seleccione la materia' }]
+                                    },
+                                    fecha: {
+                                        identifier: 'ina_fecha',
+                                        rules: [{ type: 'empty', prompt: 'Seleccione la fecha' }]
+                                    }
+                                },
+                                onSuccess: function (e) {
+
+                                    e.submit();
+                                }
+                            }).submit(function (e) {
+
+                                e.preventDefault();
+                            });
+                        });
+
+                    </script>
+                </div>
+                {{!-- END:modal justificacion --}}
+
+                {{/ifeq}}
+
+                <!-- TODO:Modal eliminar -->
+                <div class="modal fade" id="modal-delete-{{idinasistencia}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header alert-danger">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Eliminar inasistencia</h4>
+                            </div>
+                            <div class="modal-body">
+                                Resumen de la información:
+                                <ul>
+                                    <li>{{alu_apellidos_nombres}}</li>
+                                    <li>{{ina_fecha}}</li>
+                                    <li>{{materia}}</li>
+                                </ul>
+                                <form action="/inspeccion/faltas/eliminar" method="POST" class="ui form">
+                                    <p>Motivo:</p>
+                                    <div class="col-sm-10">
+                                        <div class="field">
+                                            <input type="text" name="del_comment" required>
+                                        </div>
+                                        <br>
+                                    </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+
+                                <input type="hidden" name="idinasistencia" value="{{idinasistencia}}" readonly>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{!-- END:Modal eliminar --}}
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

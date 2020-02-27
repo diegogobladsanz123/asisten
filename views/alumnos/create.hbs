@@ -1,0 +1,253 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <div class="panel-body">
+
+        <form action="{{ruta}}" class="ui form" id="frm-alumno" method="POST"
+            onKeypress="if(event.keyCode == 13) event.returnValue = false;">
+            <div class="row">
+                <div class="ui error message"></div>
+                <div class="col-lg-6 col-sm-6 col-xs-6">
+                    <div class="field">
+                        <label for="">Cédula <span class="btn btn-primary btn-xs pull-right" onclick="checkCedula()"><i
+                                    class="fa fa-search"></i>Verificar</span></label>
+                        <div class="ui rigth icon input loading" id=''>
+                            <i class="" id="search_icon"></i>
+                            <input type="text" name="alu_cedula" value="{{alumno.alu_cedula}}" id="alu_cedula">
+                            <input type="hidden" name="idalumno" value="{{alumno.idalumno}}" id="idalumno" readonly>
+                            <input type="hidden" name="ok" value="" id="ok" readonly>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="field" id="cedula_msj">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ui segment">
+                        <div class="" id="loader">
+                            <div class="ui text loader">Cargando.</div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-12">
+                                <div class="ui dividing header">Datos del estudiante</div>
+                                <div class="field">
+
+
+                                    <label for="">Apellidos y nombres</label>
+                                    <input type="text" value="{{alumno.alu_apellidos_nombres}}"
+                                        name="alu_apellidos_nombres">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="field">
+                                    <label for="">Fecha de nacimiento</label>
+
+                                    <div class="input-group date" data-provide="datepicker">
+                                        <input type="text" class="form-control" name="alu_fecha_nac"
+                                            value="{{alumno.alu_fecha_nac}}" placeholder="yyyy-mm-dd">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="field">
+                                    <label for="">Lugar de nacimiento</label>
+                                    <input type="text" name="alu_lugar_nac" value="{{alumno.alu_lugar_nac}}" id="">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="field">
+                                    <label for="">Domicilio</label>
+                                    <input type="text" name="alu_direccion" value="{{alumno.alu_direccion}}" id="">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="field"></div>
+                                <div class="ui dividing header">Datos del representante</div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="field">
+                                    <label for="">Nombre represenante</label>
+                                    <input type="text" name="alu_representante_nombres"
+                                        value="{{alumno.alu_representante_nombres}}" id="">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="field">
+                                    <label for="">Teléfono representante</label>
+                                    <input type="text" name="alu_representante_telefono"
+                                        value="{{alumno.alu_representante_telefono}}" id="">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 text-right"><br>
+                                <div class="field">
+                                    {{#ifeq ruta '/alumnos'}}
+                                    <span class="btn btn-default" id="btnReset">Limpiar</span>
+                                    {{/ifeq}}
+                                    <a href="/alumnos?page=1&limit=50" class="btn btn-default">Regresar</a>
+                                    <button id="btnGuardar" type="submit" class="btn btn-primary">Guardar</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </form>
+
+        <script>
+
+
+            $(document).ready(() => {
+                checkCedula();
+                $('.input-group.date').datepicker({
+                    todayHighlight: true,
+                    format: 'yyyy-mm-dd',
+                    language: "es",
+                    orientation: "top",
+                    autoclose: true
+                });
+            })
+            $('#btnReset').click(() => {
+                $('#frm-alumno').form('reset')
+            })
+            $(() => {
+                $('#frm-alumno').form({
+                    fields: {
+                        alu_cedula: {
+                            identifier: 'alu_cedula',
+                            rules: [
+                                { type: 'empty', prompt: 'Ingrese el número de cedula' },
+                                { type: 'minLength[10]', prompt: 'Ingrese un numero de 10 dígitos' },
+                                { type: 'maxLength[13]', prompt: 'El número no puede superar los 13 dígitos' }
+                            ]
+                        },
+                        alu_apellidos_nombres: {
+                            identifier: 'alu_apellidos_nombres',
+                            rules: [{ type: 'empty', prompt: 'Ingrese los apellidos y nombres ' }]
+                        },
+                        alu_fecha_nac: {
+                            identifier: 'alu_fecha_nac',
+                            rules: [{ type: 'empty', prompt: 'Ingrese la fecha de nacimiento' }]
+                        },
+                        alu_lugar_nac: {
+                            identifier: 'alu_lugar_nac',
+                            rules: [{ type: 'empty', prompt: 'Ingrese el lugar de nacimiento' }]
+                        },
+                        alu_direccion: {
+                            identifier: 'alu_direccion',
+                            rules: [{ type: 'empty', prompt: 'Ingrese el domicilio' }]
+                        },
+                        alu_representante_nombres: {
+                            identifier: 'alu_representante_nombres',
+                            rules: [{ type: 'empty', prompt: 'Ingrese los apellidos y nombre del representante' }]
+                        },
+                        ok: {
+                            identifier: 'ok',
+                            rules: [{ type: 'empty', prompt: 'Por favor verifíque el número de cédula' }]
+                        }
+                    }, onSuccess: function (e) {
+                        e.submit();
+                    }
+                }).submit((e) => {
+                    e.preventDefault();
+                })
+            })
+            //TODO:funciones validación de la cédula de identificación
+            $('#alu_cedula').keyup((e) => {
+                checkCedula();
+            })
+
+            function checkCedula() {
+                var cedula_msj = $('#cedula_msj').val();
+                let cad = $('#alu_cedula').val().trim();
+                let idalumno = $('#idalumno').val();
+
+                var total = 0;
+                var longitud = cad.length;
+                var longcheck = longitud - 1;
+
+                var msjCedCorrecta = `<span class="text-success"><i class="fa fa-check"></i> La cédula es correcta</span>`;
+
+                var msjCedincorrecta = `<span class="text-danger"> <i class="fa fa-times"></i> La cédula es incorrecta</span>`;
+                var msjCedincorrectaDigitos = `<span class="text-danger"> <i class="fa fa-times"></i> El número debe contener 10 dígitos</span>`;
+
+                if (cad !== "" && longitud === 10) {
+                    for (i = 0; i < longcheck; i++) {
+                        if (i % 2 === 0) {
+                            var aux = cad.charAt(i) * 2;
+                            if (aux > 9) aux -= 9;
+                            total += aux;
+                        } else {
+                            total += parseInt(cad.charAt(i)); // parseInt o concatenará en lugar de sumar
+                        }
+                    }
+                    total = total % 10 ? 10 - total % 10 : 0;
+                    if (cad.charAt(longitud - 1) == total) {
+                        $.ajax({
+                            beforeSend: () => {
+                                $('#search_icon').addClass('ui search icon');
+                                $('#cedula_msj').html('');
+                            },
+                            url: `/alumnos/findByCedula/${cad}`,
+                            type: 'get',
+                            success: (res) => {
+                                if (res != false) {
+                                    //la cedula ya esta registrada
+                                    if (res.idalumno == idalumno) {
+                                        //la cedula ya esta registrada y perenece a la misma persona
+                                        $('#cedula_msj').html('<label for="">&nbsp;</label>' + msjCedCorrecta);
+                                        $('#ok').val('ok');
+                                    } else {
+                                        //la cedula ya esta registrada pero pertenece a otra persona
+                                        var msjCedregistrada = `<span class="text-warning"><i class="fa fa-warning"></i> La cédula ya fue registrada, <a href="/alumnos/edit/${res.idalumno}" target="_blank">Ver alumno</a></span>`
+                                        $('#cedula_msj').html('<label for="">&nbsp;</label>' + msjCedregistrada);
+                                        $('#ok').val('');
+                                    }
+                                } else {
+                                    //la cedula esta disponible
+                                    $('#cedula_msj').html('<label for="">&nbsp;</label>' + msjCedCorrecta);
+                                    $('#ok').val('ok');
+                                }
+                                $('#search_icon').removeClass('ui search icon');
+                                $('#loader').removeClass('ui active inverted dimmer');
+                            },
+                            complete: (JQueryXHR, textStatus) => {
+
+                            }, error(jqXHR, textStatus, errorThrown) {
+
+                            }
+                        })
+                    } else {
+                        $('#cedula_msj').html('<label for="">&nbsp;</label>' + msjCedincorrecta);
+                    }
+                } else {
+                    $('#cedula_msj').html('<label for="">&nbsp;</label>' + msjCedincorrectaDigitos);
+                    $('#ok').val('');
+                }
+            }
+
+        </script>
+
+    </div>
+
+
+</div>

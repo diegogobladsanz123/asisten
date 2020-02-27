@@ -1,0 +1,381 @@
+<div class="ui centered grid">
+    <div class="sixteen wide column ">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Editar usuario
+            </div>
+            <div class="panel-body">
+                {{#ifeq users.fullname 'Administrador'}}
+
+                <p class="text-danger"><i class="fa fa-info"></i> Para actualizar la contraseña del administrador es
+                    necesario ingresar la contraseña actual.</p>
+                <div class="field">
+                    <label for="">Por favor ingrese la contraseña actual</label>
+                    <input type="password" class="form-control" placeholder="••••••••••••••••" name="password_"
+                        id="contrasena_actual">
+                </div>
+                {{/ifeq}}
+                <form action="/users/edit/{{users.iduser}}" method="post" class="ui form" id="frm_user">
+                    <div class="ui grid">
+                        <div class="twelve wide column">
+
+                            {{#ifeq user.fullname 'Administrador'}}
+                            {{else}}
+
+                            {{/ifeq}}
+                            <div class="field">
+
+                                <label for="">Información de la cuenta</label>
+                                <div class="two fields">
+                                    <div class="field">
+                                        <input type="hidden" name="profesor_idprofesor"
+                                            value="{{users.profesor_idprofesor}}" readonly>
+                                        <input type="text" placeholder="Nombre completo" value="{{users.fullname}}"
+                                            name="fullname" id="fullname"
+                                            {{#ifeq users.fullname 'Administrador'}}readonly{{/ifeq}}>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <input type="text" placeholder="Username" name="username"
+                                                value="{{users.username}}"
+                                                {{#ifeq users.fullname 'Administrador'}}readonly{{/ifeq}}>
+                                            <i class="user icon"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="two fields" id="div_controles">
+                                    {{#ifeq users.fullname 'Administrador'}}
+                                    <div id="aaa" class="">
+
+                                        <label for="">Contraseña.</label><br>
+                                        <span id="password_strength">&nbsp;</span>
+                                        <input type="password" id="tbPassword" placeholder="••••••••••••••••"
+                                            name="password" onkeyup="CheckPasswordStrength(this.value)">
+
+                                        <label for="">Verificar contraseña </label>
+                                        <input type="password" placeholder="••••••••••••••••" name="password2">
+
+                                    </div>
+                                    <script>
+                                        $(() => {
+                                            $('#frm_user').form({
+                                                fullname: {
+                                                    identifier: 'fullname',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Ingrese el nombre completo de la cuenta de usuario'
+                                                        }
+                                                    ]
+                                                },
+                                                username: {
+                                                    identifier: 'username',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Ingrese el username'
+                                                        }
+                                                    ]
+                                                },
+
+                                                password: {
+                                                    identifier: 'password',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Ingrese la contraseña'
+                                                        },
+                                                        {
+                                                            type: 'minLength[6]',
+                                                            prompt: 'Ingrese una contraseña de minimo 6 caracteres'
+                                                        }
+                                                    ]
+                                                },
+                                                password2: {
+                                                    identifier: 'password2',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'El campo de verificación de contraseña se encuentra vacío...'
+                                                        }, {
+                                                            type: 'match[password]',
+                                                            prompt: 'Las contraseñas no coinciden..'
+                                                        }
+                                                    ]
+                                                },
+                                                rol_idrol: {
+                                                    identifier: 'rol_idrol',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Por favor seleccione el rol.'
+                                                        }
+                                                    ]
+                                                }
+
+                                            })
+                                        })
+                                    </script>
+                                    {{else}}
+                                    <div class="field">
+                                        <label for="">Contraseña</label>
+                                        <span id="password_strength">&nbsp;</span>
+                                        <input type="password" onkeyup="CheckPasswordStrength(this.value)"
+                                            id="tbPassword" placeholder="••••••••••••••••" name="password">
+
+                                    </div>
+                                    <div class="field">
+                                        <label for="">Verificar contraseña </label><br>
+                                        <input type="password" placeholder="••••••••••••••••" name="password2">
+                                    </div>
+                                    <script>
+                                        $(() => {
+                                            $('#frm_user').form({
+                                                fullname: {
+                                                    identifier: 'fullname',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Ingrese el nombre completo de la cuenta de usuario'
+                                                        }
+                                                    ]
+                                                },
+                                                username: {
+                                                    identifier: 'username',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Ingrese el username'
+                                                        }
+                                                    ]
+                                                },
+
+                                                password: {
+                                                    identifier: 'password',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Ingrese la contraseña'
+                                                        },
+                                                        {
+                                                            type: 'minLength[6]',
+                                                            prompt: 'Ingrese una contraseña de minimo 6 caracteres'
+                                                        }
+                                                    ]
+                                                },
+                                                password2: {
+                                                    identifier: 'password2',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'El campo de verificación de contraseña se encuentra vacío.'
+                                                        }, {
+                                                            type: 'match[password]',
+                                                            prompt: 'Las contraseñas no coinciden.'
+                                                        }
+                                                    ]
+                                                },
+                                                rol_idrol: {
+                                                    identifier: 'rol_idrol',
+                                                    rules: [
+                                                        {
+                                                            type: 'empty',
+                                                            prompt: 'Por favor seleccione el rol.'
+                                                        }
+                                                    ]
+                                                }
+
+                                            })
+                                        })
+                                    </script>
+
+                                    {{/ifeq}}
+
+                                </div>
+                            </div>
+
+                            {{#ifeq users.fullname 'Administrador'}}{{else}}
+                            <div class="two fields">
+                                <div class="field">
+                                    <label for="">Rol actual.</label>
+                                    <input type="text" disabled {{#ifeq ../users.rol_idrol 42}}value="Inspector general"
+                                        {{else}}value="Inspector de curso" {{/ifeq}}>
+                                </div>
+                                <div class="field">
+                                    <label for="">Cambiar Rol</label>
+                                    <div class="">
+
+
+
+                                        <select class="ui fluid search dropdown" name="rol_idrol">
+
+                                            {{#each ../rol}}
+
+                                            <option {{#ifeq idrol ../../users.rol_idrol}}selected{{/ifeq}}
+                                                value="{{idrol}}">{{rol_nombre}} </option>
+
+                                            {{/each}}
+                                        </select>
+                                        <div class="ui pointing red basic label">
+                                            Seleccione el rol. <a href="/rol"><i class="fa fa-info-circle"></i> </a>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            {{/ifeq}}
+                            <div class="ui error message"></div>
+                            <div class="text-center">
+                              {{!--   {{#ifeq users.fullname 'Administrador'}}{{else}}<span class="btn btn-default"
+                                    id="btn_reset">Limpiar</span>{{/ifeq}} --}}
+
+                                <button class="btn btn-primary" id="btn-guardar">Guardar</button>
+                                <a href="/users" class="btn btn-default">Regresar</a>
+
+                            </div>
+                        </div>
+                        <div class="four wide column">
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+
+
+
+    function CheckPasswordStrength(password) {
+        var password_strength = document.getElementById("password_strength");
+
+
+        //if textBox is empty
+        if (password.length == 0) {
+            password_strength.innerHTML = "";
+            return;
+        }
+
+        //Regular Expressions
+        var regex = new Array();
+        regex.push("[A-Z]"); //For Uppercase Alphabet
+        regex.push("[a-z]"); //For Lowercase Alphabet
+        regex.push("[0-9]"); //For Numeric Digits
+        regex.push("[$@$!%*#?&]"); //For Special Characters
+
+        var passed = 0;
+
+        //Validation for each Regular Expression
+        for (var i = 0; i < regex.length; i++) {
+            if ((new RegExp(regex[i])).test(password)) {
+                passed++;
+            }
+        }
+
+        //Validation for Length of Password
+        if (passed > 2 && password.length > 8) {
+            passed++;
+        }
+
+        //Display of Status
+        var color = "";
+        var passwordStrength = "";
+        switch (passed) {
+            case 0:
+                break;
+            case 1:
+                passwordStrength = "La contraseña es débil.";
+                color = "Red";
+                $('#btn-guardar').hide();
+                break;
+            case 2:
+                passwordStrength = "La contraseña es buena.";
+                color = "darkorange";
+                $('#btn-guardar').show();
+                break;
+            case 3:
+                break;
+            case 4:
+                passwordStrength = "La contraseña es segura.";
+                color = "Green";
+                $('#btn-guardar').show();
+                break;
+            case 5:
+                passwordStrength = "La contraseña es muy segura.";
+                color = "darkgreen";
+                $('#btn-guardar').show();
+                break;
+        }
+        password_strength.innerHTML = passwordStrength;
+        password_strength.style.color = color;
+    }
+
+    $('#contrasena_actual').keyup(() => {
+        let pwd = $('#contrasena_actual').val();
+
+
+
+        $.ajax({
+            beforeSend: () => {
+                console.log('Sending pwd...');
+            },
+            url: `/auth/checkPw?pwd=${pwd}`,
+            type: 'get',
+            success: (res) => {
+                if (res == 'si') {
+
+                    $('#aaa').show();
+                } else {
+                    $('#aaa').hide();
+                }
+            },
+            complete: (JQueryXHR, textStatus) => {
+                //console.log('complete =>');
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+                //console.log('error =>');
+            }
+        });
+    })
+    $(document).ready(function () {
+        $('select.dropdown').dropdown();
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        })
+
+        $('#btn-guardar').hide();
+
+        $('#aaa').hide();
+    })
+
+    $('#btn_reset').click(() => {
+        $('#frm_user').form('clear');
+    })
+    $('#profesor_idprofesor').change((event) => {
+        let profesor_idprofesor = $('#profesor_idprofesor option:selected').text();
+        if (profesor_idprofesor !== "Seleccione...") {
+            $('#fullname').prop('readonly', true);
+            $('#fullname').val(profesor_idprofesor);
+        } else {
+            //   $('#fullname').prop('readonly', false);
+            document.getElementById('fullname').readOnly = false;
+            $('#fullname').val('');
+        }
+
+
+
+    })
+
+
+</script>

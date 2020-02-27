@@ -1,0 +1,188 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>Editar rol</h3>
+    </div>
+
+    <div class="panel-body">
+        <form action="/rol/edit/{{row.idrol}}" method="post" class="ui form" id="frm-rol">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h4 class=" ui horizontal divider header"><i class="fa fa-tag"></i>Información </h4>
+                    <div class="field">
+                        <div class="ui corner labeled input">
+                            <input type="text" placeholder="Nombre..." name="rol_nombre" value="{{row.rol_nombre}}"
+                                {{#ifeq row.rol_nombre 'Inspector de curso'}}readonly{{/ifeq}}{{#ifeq row.rol_nombre 'Administrador'}}readonly{{/ifeq}}
+                                {{#ifeq row.rol_nombre 'Inspector de curso'}}readonly{{/ifeq}}
+                                {{#ifeq row.rol_nombre 'Inspector general'}}readonly{{/ifeq}}>
+                            <div class="ui corner label">
+                                <i class="asterisk icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="field">
+                            <input type="text" name="rol_descripcion" placeholder="Descripción"
+                                value="{{row.rol_descripcion}}">
+                        </div>
+
+                    </div>
+                    <br>
+                </div>
+
+                <!-- TODO: permisos generales desabilitados-->
+                {{#ifeq row.idrol 1}}
+                <div class="col-md-6 col-sm-6">
+                    <h4 class="ui horizontal divider header"><i class="fas fa-id-card-alt"></i>&nbsp;Permisos </h4>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_crear"
+                                    {{#ifeq ../row.rol_crear "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Crear</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_editar"
+                                    {{#ifeq ../row.rol_editar "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Editar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_eliminar"
+                                    {{#ifeq ../row.rol_eliminar "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Eliminar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_imprimir"
+                                    {{#ifeq ../row.rol_imprimir "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Imprimir</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+                </div>
+                {{/ifeq}}
+                <div class="col-md-4 col-sm-6">
+                    <h4 class="ui horizontal divider header"><i class="fas fa-check"></i>&nbsp;Inasistencias </h4>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+
+                                <input type="checkbox" tabindex="0" class="hidden" name="addInasistencia"
+                                    {{#ifeq row.addInasistencia "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Registrar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="justificarInasistencia"
+                                    {{#ifeq row.justificarInasistencia "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Justificar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="delInasistencia"
+                                    {{#ifeq row.delInasistencia "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Eliminar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <h4 class="ui horizontal divider header"><i class="fas fa-list"></i>&nbsp;Novedades </h4>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+
+                                <input type="checkbox" tabindex="0" class="hidden" name="addNovedad"
+                                    {{#ifeq row.addNovedad "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Registrar</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="delNovedad"
+                                    {{#ifeq row.delNovedad "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Eliminar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+
+                    <h4 class="ui horizontal divider header"><i class="fas fa-envelope"></i>&nbsp;Notificaciones </h4>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="addNotif"
+                                    {{#ifeq row.addNotif "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Registrar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="delNotif"
+                                    {{#ifeq row.delNotif "1"}} checked{{else}} {{/ifeq}}>
+                                <label>Eliminar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui error message"></div>
+            <div class="col-sm-12"><br>
+                <div class="text-center">
+                    <button class="btn btn-primary">Guardar</button>
+                    <a href="/rol" class="btn btn-default">Regresar</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(
+        function () {
+            $('.ui.checkbox')
+                .checkbox()
+                ;
+        });
+
+    $(() => {
+        $('#frm-rol').form({
+            rol_nombre: {
+                identifier: 'rol_nombre',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Ingrese un nombre'
+                }]
+            },
+
+        }, {
+            onSuccess: (e) => {
+
+            }
+        })
+    });
+</script>

@@ -1,0 +1,191 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Formulario de registro</div>
+    <div class="panel-body">
+        <div class="col-lg-10 col-md-10">
+            <div class="ui dividing header">
+                <h4>Información</h4>
+            </div>
+            <form action="/funcionario/" method="POST" class="ui form" id="frm_funcionario">
+                {{#ifeq fun.fun_state 0}}
+
+                <div class="ui info floating message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Importante!
+                    </div>
+                    El funcionario se encuentra <code>inactivo</code>, tenga en cuenta que al realizar la actualización
+                    de la información el
+                    usuario volverá a estar disponible.
+                </div>
+                {{/ifeq}}
+                <div class="" id="msg">
+
+                </div>
+
+
+                <div class="two fields">
+                    <div class="field">
+                        <label for="">Cédula</label>
+                        <div class="ui rigth icon input loading" id='div_fun_cedula'>
+                            <i class="" id="search_icon"></i>
+                            <input type="text" name="fun_cedula" value="{{fun.fun_cedula}}" id="fun_cedula">
+
+                        </div>
+
+                    </div>
+                    <div class="field">
+                        <label for="">Nombres</label>
+                        <input type="text" name="fun_nombres" value="{{fun.fun_nombres}}">
+                    </div>
+
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label for="">Titulo</label>
+                        <input type="text" name="fun_titulo" value="{{fun.fun_titulo}}">
+                    </div>
+                    <div class="field">
+                        <label for="">Teléfono</label>
+                        <input type="text" name="fun_telefono" value="{{fun.fun_telefono}}">
+                    </div>
+                </div>
+                <div class="ui error message"></div>
+                <div class="text-center">
+                    <span class="btn btn-default" id="btn_reset">Limpiar</span>
+                    <button class="btn btn-primary">Guardar</button>
+                    <a href="/funcionario" class="btn btn-default">Regresar</a>
+                </div>
+            </form>
+
+            <div class="ui dividing header">
+                <h4>Distributivo de trabajo</h4>
+            </div>
+            <table class="ui blue table">
+                <thead>
+                    <tr>
+                        <th>Materia</th>
+                        <th>Curso</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>s</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
+    })
+    $('#close_dup').on('click', function () {
+        
+    })
+
+    
+
+    var fun_cedula = $('#fun_cedula');
+    fun_cedula.keyup(function () {
+
+        $('#search_icon').removeClass('ui search icon');
+        $.ajax({
+            beforeSend: function () {
+                $('#search_icon').addClass('ui search icon');
+            },
+
+            url: `/funcionario/findByCi/${fun_cedula.val().trim()}`,
+            type: 'get',
+            success: function (res) {
+                if (res != false) {
+                    let msg = `<div class="ui floating message">
+                    
+                    <div class="header">Importante! </div>
+                    <p> El numero ya fue registrado <a class="btn btn-info btn-xs" href="/funcionario/edit/${res.idfuncionario}">Ver registro</a></p>
+                </div>`;
+                    $('#msg').html(msg);
+                } else {
+                    $('#msg').empty();
+                    $('#search_icon').removeClass('ui search icon');
+                }
+            },
+            error: function (jqXHR, state, err) {
+                console.log(`-> error: ${state}`);
+            },
+            complete: function (jqXHR, state, err) {
+                //console.log(`-> complete: ${state}`);
+            }
+        });
+    })
+
+
+
+
+
+
+    $(() => {
+        $('#frm_funcionario').form({
+            fun_cedula: {
+                identifier: 'fun_cedula',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingrese la cédula.'
+                    },
+                    {
+                        type: 'exactLength[10]',
+                        prompt: 'El número debe contener 10 dígitos.'
+                    },
+                    {
+                        type: 'number',
+                        prompt: 'La cédula solo debe contener números.'
+                    }
+
+                ]
+            },
+            fun_nombres: {
+                identifier: 'fun_nombres',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingrese el nombre del funcionario'
+                    }
+                ]
+            },
+            fun_titulo: {
+                identifier: 'fun_titulo',
+                rules: [
+                    {
+                        type: 'maxLength[55]',
+                        prompt: 'Ingrese un maximo de 55 caractéres.'
+                    }
+                ]
+            },
+
+            fun_telefono: {
+                identifier: 'fun_telefono',
+                rules: [
+                    {
+                        type: 'number',
+                        prompt: 'El número telefónico no puede contener letras.'
+                    }, {
+                        type: 'maxLength[10]',
+                        prompt: 'El número telefónico no puede contener mas de 10 digitos.'
+                    }
+                ]
+            }
+
+        })
+    })
+
+
+</script>

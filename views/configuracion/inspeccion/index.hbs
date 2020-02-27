@@ -1,0 +1,485 @@
+<!-- TODO: modal desvincular curso de ic-->
+{{#each cci}}
+<div class="modal fade" id="modal-id-{{idinspector}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Quitar curso</h4>
+            </div>
+            <div class="modal-body">
+                <p>¿Esta seguro que desea desvincular el curso <b>{{cur_curso}}</b> ?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="/inspeccion/unSetInspector/{{idinspector}}" method="post">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+
+                    <button type="submit" class="btn btn-danger">Continuar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}
+<!-- END: modal desvincular curso de ic-->
+<!-- TODO:modal asignar curso a inspector -->
+<div class="modal fade" id="modal-add-ic">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Asignar curso </h4>
+
+            </div>
+
+            <form action="/inspeccion/setInspector" method="post" class="ui form" id="frm_csi">
+                <div class="modal-body">
+                    <div class="field">
+                        <label for="">Seleccione el curso.</label>
+                        <select name="idcurso" id="" class="ui fluid search selection dropdown">
+                            <option value="">Seleccione...</option>
+                            {{#each csi}}
+                            <option value="{{idcurso}}">{{cur_curso}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="">Seleccione el inspector</label>
+                        <select name="iduser" id="" class="ui fluid search selection dropdown">
+                            <option value="">Seleccione...</option>
+                            {{#each row}}
+                            <option value="{{iduser}}">{{username}} - {{fullname}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+
+                    <div class="ui error message"></div>
+                </div>
+                <div class="modal-footer">
+                    <span class="btn btn-default" onclick="limpiar();">Resetear</span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                        onclick="limpiar();">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{!-- END:modal asignar curso a inspector --}}
+
+<!--TODO: moadl set IG-->
+<div class="modal fade" id="modal-add-ig">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Asignar inspector general</h4>
+            </div>
+            <form action="/inspeccion/setInspectorGeneral" class="ui form" method="POST" id="setIg">
+                <div class="modal-body">
+                    <div class="ui error message"></div>
+                    <div class="field">
+                        <label for="">Seleccione el inspector</label>
+                        <select name="iduser" id="" class="ui fluid search selection dropdown">
+                            <option value="">Seleccione...</option>
+                            {{#each row3}}
+                            <option value="{{iduser}}">{{username}} - {{fullname}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+            <script>
+                $(() => {
+                    $('#setIg').form({
+                        fields: {
+                            iduser: {
+                                identifier: 'iduser',
+                                rules: [{ type: 'empty', prompt: 'Por favor seleccione el Inspector' }]
+                            }
+                        }, onSuccess(e) {
+                            e.submit();
+                        }
+                    }).submit((e) => {
+                        e.prevenDefault();
+                    })
+                })
+            </script>
+        </div>
+    </div>
+</div>
+<!--END: moadl set IG-->
+
+<ul class="timeline">
+
+    <!-- timeline time label -->
+    <li class="time-label">
+        <span class="bg-default">
+            <span class="text-blue"><i class="fa fa-user-shield text-red"></i> Inspector General</span>
+
+            {{#if insgg}}
+            {{else}}
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-primary btn-xs" data-toggle="modal"
+                data-target="#modal-add-ig"><i class="fa fa-plus"></i> Asignar</span>
+            {{/if}}
+        </span>
+    </li>
+    <!-- /.timeline-label -->
+
+    <!-- timeline item -->
+
+    <li>
+        <table class="ui small selectable celled table">
+            <tbody>
+                {{#each insgg}}
+                {{#ifeq tipo 1}}
+                <tr {{#ifeq ../user_state 0}} class="bg-danger" {{/ifeq}}>
+                    <td style="width: 300px;">
+                        <b>{{../fullname}}</b><br>
+                        {{#ifeq ../rol_idrol 42}}
+                        Rol de usuario: <span class="badge bg-blue">Inspector general</span>
+                        {{else}}
+
+                        Rol de usuario: <span class="badge">Inspector de curso</span>
+                        {{/ifeq}}
+                        <div class="ui list">
+                            <div class="item">
+                                <i class="university icon"></i>
+                                <div class="content">
+                                    {{../fun_titulo}}
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="address card icon"></i>
+                                <div class="content">
+                                    {{../fun_cedula}}
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <i class="phone square icon"></i>
+                                <div class="content">
+                                    {{../fun_telefono}}
+                                </div>
+                            </div>
+                        </div>
+                        {{#ifeq ../user_state 0}}
+                        <span class="pull-right text-danger"><i class="fa fa-warning"></i>El inspector esta
+                            desacivado.</span>
+                        {{else}}
+
+                        {{/ifeq}}
+                    </td>
+                    <td>
+
+                        <a class="btn btn-danger btn-xs" data-toggle="modal" href='#modal-id'><i
+                                class="fa fa-times"></i> Quitar inspector
+                            general</a>
+                        <div class="modal fade" id="modal-id">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Quitar Inspector general</h4>
+                                    </div>
+                                    <form action="/inspeccion/unSetInspector/{{../idinspector}}" class="ui form"
+                                        method="POST">
+                                        <div class="modal-body">
+                                            <dl class="dl-horizontal">
+                                                <dt>Nombre del inspector:</dt>
+                                                <dd>{{../fullname}}</dd>
+                                                <dt>Título:</dt>
+                                                <dd>{{../fun_titulo}}</dd>
+                                                <dt>Rol de usuario:</dt>
+                                                <dd>{{#ifeq ../rol_idrol 42}}
+                                                    <span class="badge bg-blue">Inspector general</span>
+                                                    {{else}}
+                                                    <span class="badge">Inspector de curso</span>
+                                                    {{/ifeq}}
+                                                </dd>
+
+                                            </dl>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-danger">Continuar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{!-- <ul class="list-group">
+                            {{#each ../../cci}}
+                            {{#ifeq ../../iduser user_iduser}}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="/curso/edit/{{../idcurso}}">{{../cur_curso}}</a>
+                                <!-- TODO: LLAMADA modal desvincular curso de ic-->
+                                <a class="badge label-danger badge-pill" title="{{../idinspector}}" data-toggle="modal"
+                                    href='#modal-id-{{../idinspector}}'>&times;</a>
+                            </li>
+                            {{/ifeq}}
+                            {{/each}}
+                        </ul> --}}
+                    </td>
+
+                </tr>
+                {{/ifeq}}
+                {{/each}}
+            </tbody>
+        </table>
+
+    </li>
+
+
+    <!-- END timeline item -->
+
+
+
+    <!-- timeline time label -->
+    <li class="time-label">
+        <span class="bg-default">
+            <span class="text-blue"><i class="fa fa-users text-red"></i> Inspectores de
+                curso</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-primary btn-xs" data-toggle="modal" href='#modal-add-ic' title="Asignar curso"><i
+                    class="fa fa-plus"></i>&nbsp;Asignar Curso</a>
+        </span>
+
+    </li>
+    <!-- /.timeline-label -->
+
+    <!-- timeline item -->
+    <li>
+        <table class="ui small selectable celled table">
+
+            <tbody>
+                {{#each ins}}
+                {{#ifeq tipo 2}}
+                <tr {{#ifeq ../user_state 0}} class="bg-danger" {{/ifeq}}>
+                    <td style="width: 300px;">
+                        <b>{{../fullname}}</b><br>
+                        {{#ifeq ../rol_idrol 42}}
+                        Rol de usuario: <span class="badge bg-blue">Inspector general</span>
+                        {{else}}
+
+                        Rol de usuario: <span class="badge">Inspector de curso</span>
+                        {{/ifeq}}
+
+
+                        <div class="ui list">
+                            <div class="item">
+                                <i class="university icon"></i>
+                                <div class="content">
+                                    {{../fun_titulo}}
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="address card icon"></i>
+                                <div class="content">
+                                    {{../fun_cedula}}
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <i class="phone square icon"></i>
+                                <div class="content">
+                                    {{../fun_telefono}}
+                                </div>
+                            </div>
+                        </div>
+                        {{#ifeq ../user_state 0}}
+                        <span class="pull-right text-danger"><i class="fa fa-warning"></i>El inspector esta
+                            desacivado.</span>
+                        {{else}}
+
+                        {{/ifeq}}
+                    </td>
+                    <td>
+                        <ul class="list-group">
+                            {{#each ../../cci}}
+                            {{#ifeq ../../iduser user_iduser}}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="/curso/edit/{{../idcurso}}">{{../cur_curso}}</a>
+                                <!-- TODO: LLAMADA modal desvincular curso de ic-->
+                                <a class="badge label-danger badge-pill" title="{{../idinspector}}" data-toggle="modal"
+                                    href='#modal-id-{{../idinspector}}'>&times;</a>
+                            </li>
+                            {{/ifeq}}
+                            {{/each}}
+                        </ul>
+                    </td>
+
+                </tr>
+                {{/ifeq}}
+                {{/each}}
+            </tbody>
+        </table>
+
+    </li>
+
+    {{#each ic}}
+
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-users bg-blue"></i>
+
+
+        <div class="timeline-item">
+            {{!-- <span class="time"><i class="fa fa-clock-o"></i> 12:05</span> --}}
+
+            <h3 class="timeline-header"><a href="/funcionario/edit/{{idfuncionario}}">{{fun_nombres}}</a></h3>
+
+            <div class="timeline-body">
+                <div class="ui list">
+                    <div class="item">
+                        <i class="university icon"></i>
+                        <div class="content">
+                            {{fun_titulo}}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="address card icon"></i>
+                        <div class="content">
+                            {{fun_cedula}}
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <i class="phone square icon"></i>
+                        <div class="content">
+                            {{fun_telefono}}
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <strong>Cursos asignados: </strong>
+
+
+                <div class="timeline-footer">
+
+
+                </div>
+                <div class="row">
+                    <div class="table">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="table-responsive">
+                                    <table class="ui compact blue celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Extensión</th>
+                                                <th>Jornada</th>
+                                                <th>Nivel</th>
+                                                <th>Curso</th>
+                                                <th width="80px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {{#each ../cci}}
+                                            {{#ifeq user_iduser ../iduser }}
+                                            <tr>
+                                                <td>{{../niv_extension}}</td>
+                                                <td>{{../niv_jornada}}</td>
+                                                <td>{{../niv_nivel}}</td>
+                                                <td> <a class="ui teal tag label"
+                                                        href="/curso/edit/{{../idcurso}}">{{../cur_curso}}</a> </td>
+                                                <td>
+
+                                                    <span class="btn btn-danger btn-flat btn-xs" data-toggle="modal"
+                                                        data-target="#modal-delete-{{../idcurso}}"><i
+                                                            class="fa fa-times"></i></span>
+
+                                                    <div class="modal fade" id="modal-delete-{{../idcurso}}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header alert-danger">
+                                                                    <button type="button" class="close"
+                                                                        data-dismiss="modal"
+                                                                        aria-hidden="true">&times;</button>
+                                                                    <h4 class="modal-title">Quitar curso</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Esta seguro que desea continuar?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <form
+                                                                        action="/inspeccion/unSetInspector/{{../idcurso}}"
+                                                                        method="post">
+                                                                        <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Close</button>
+
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger">Continuar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                            {{/ifeq}}
+                                            {{/each}}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+    </li>
+
+    {{/each}}
+    <!-- END timeline item -->
+
+</ul>
+
+
+<script type="text/javascript">
+    $(document).ready(() => {
+        $('.ui.dropdown').dropdown();
+    });
+
+    function limpiar() {
+        $('#frm_csi').form('clear');
+    }
+
+    $(() => {
+        $('#frm_csi').form({
+            idcurso: {
+                identifier: 'idcurso',
+                rules: [
+                    { type: 'empty', prompt: 'Seleccione el curso.' },
+
+                ]
+            },
+            iduser: {
+                identifier: 'iduser',
+                rules: [
+                    { type: 'empty', prompt: 'Seleccione el inspector.' },
+
+                ]
+            }
+        })
+    })
+</script>

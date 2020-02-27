@@ -1,0 +1,228 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>Añadir rol</h3>
+    </div>
+    <div class="panel-body">
+        <div class="text-danger">
+            <i class="fa fa-info-circle"></i> El nombre ya se encuentra registrado <br><br>
+        </div>
+
+        <form action="/rol" method="post" class="ui form" id="frm-rol">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <h4 class=" ui horizontal divider header"><i class="fa fa-tag"></i>Información </h4>
+                    <div class="field">
+                        <div class="ui corner labeled input">
+                            <input type="text" placeholder="Nombre." name="rol_nombre" id="rol_nombre">;
+                            <div class="ui corner label">
+                                <i class="asterisk icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="field">
+                            <input type="text" name="rol_descripción" placeholder="Descripción.">
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <h4 class="ui horizontal divider header"><i class="fas fa-id-card-alt"></i>&nbsp;Permisos </h4>
+
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_crear">
+                                <label>Crear</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_editar">
+                                <label>Editar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_eliminar">
+                                <label>Eliminar</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="inline field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox" tabindex="0" class="hidden" name="rol_imprimir">
+                                <label>Imprimir</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="ui error message"></div>
+            <div class="col-sm-12"><br>
+                <div class="text-center">
+                    <button class="btn btn-primary">Guardar</button>
+                    <a href="/rol" class="btn btn-default">Cancelar</a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6" id='main'>
+
+
+
+
+            <div class="ui dividing header">formulario</div>
+            <form action="" class="ui form segment">
+
+                <label for="">Nombre</label>
+                <span id="ajaxResponse">&nbsp;</span>
+                <input type="text" class="" name="nombre" id="nombre" required>
+
+                <label for="">email</label>
+                <input type="text" name="email" required>
+
+                <div class="ui segment" id='test'>
+                    <div class="text-center">
+                        <input type="submit" name="send" value="enviar">
+                        <span class="btn btn-default" id="enviar">asd</span>
+
+                        <div id="status">
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.ui.checkbox').checkbox();
+
+        $('#abrir_modal').click(function () {
+            $('.ui.modal').modal('show');
+        });
+    })
+
+
+    $('#nombre').keyup(function (event) {
+        nombre = $('#nombre').val();
+
+    })
+
+    $('#nombre').keyup(function () {
+        $.ajax({
+            beforeSend: function () {
+                let loading = `<div class="ui active inverted dimmer">
+                    <div class="ui text loader">Espere por favor.</div>
+                </div>`;
+                $('#status').html(loading);
+            },
+            url: `/rol/search?key=${nombre.trim()}`,
+            type: 'get',
+            data: $('#main form').serialize(),
+            success: function (info) {
+                if (info == false) {
+                    $('#ajaxResponse').html(`<p class="text-success"><i class="fa fa-check"></i>&nbsp;Esta
+                disponible</p>`);
+                } else {
+                    $('#ajaxResponse').html(`<p class="text-danger"><i class="fa fa-check"></i>&nbsp;Ya fue registrado</p>`);
+                }
+                console.log('->success ' + JSON.stringify(info));
+
+
+            },
+            error: function (jqXHR, estado, error) {
+                console.log('->error ' + estado + ' msg: ' + error);
+                $('#status').html('<i class="fa fa-times text-danger"></i></i>');
+
+            },
+            complete: function (jqXHR, estado) {
+                console.log('-> complete ' + estado);
+
+            },
+            timeout: 10000
+        });
+
+    })
+
+
+
+
+
+    $(() => {
+        $.fn.form.settings.rules.myCustomRule = async (param) => {
+            let rol_state = -1;
+            $.ajax({
+                url: `/rol/search?key=${param}`,
+                type: "get",
+                async: false,
+                success: function (data) {
+                    rol_state = data.rol_state;
+                },
+                error: function () {
+                    connectionError();
+                }
+            });
+            try {
+                if (rol_state == -1) {
+                    console.log('Error no contemplado');
+                    return false;
+                } else if (rol_state == 1) {
+                    console.log('Registrado y activo');
+                    return false;
+                } else if (rol_state == 0) {
+                    console.log('Registrado pero esta inactivo');
+                    return false;
+                } else {
+                    console.log('No existe coincidencias');
+                    return true;
+                }
+            } catch (e) {
+                return false;
+            }
+
+
+        }
+
+
+        $('#frm-rol').form({
+
+            rol_nombre: {
+                identifier: 'rol_nombre',
+                rules: [
+                    { type: 'empty', prompt: 'Ingrese un nombre' },
+                    { type: 'maxLength[45]', prompt: 'Debe ingresar maximo 10 caracteres' },
+                    { type: 'myCustomRule[nombre]', prompt: 'El nombre ya fue registrado' }
+                ]
+            }
+
+        })
+    });
+
+</script>

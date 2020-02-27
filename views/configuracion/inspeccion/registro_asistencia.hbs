@@ -1,0 +1,212 @@
+<style type="text/css">
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+
+<script type="text/javascript">
+
+
+
+    function genPDF2() {
+        html2canvas(document.querySelector("#contenidoo")).then(canvas => {
+
+            var dataURL = canvas.toDataURL();
+            var pdf = new jsPDF("l", "px", "a4");//el parametro L define si es landscape
+            pdf.addImage(dataURL, 'JPEG', 0, 0, 0, 0); //addImage(image, format, x-coordinate, y-coordinate, width, height)
+            pdf.save("Reporte.pdf");
+        });
+    }
+    /*
+        function genPDF() {
+            html2canvas(document.body, {
+                onrendered: function (canvas) {
+
+                    var img = canvas.toDataURL("image/png");
+                    var doc = new jsPDF();
+                    doc.addImage(img, 'JPEG', 20, 20);
+                    doc.save('test.pdf');
+                }
+
+            });
+
+        }
+        */
+</script>
+<div class="contentt">
+    <div class="row">
+        <div class="">
+            <div class="panel panel-default">
+                <div class="panel-body" id="contenidoo">
+                    <h3 class="text-center">REPORTE DE NOVEDADES POR INSPECTOR<input type="button"
+                            class="btn btn-primary btn-xs pull-right" name="imprimir" value="Imprimir"
+                            onclick="window.print();">
+
+                        <a class="btn btn-primary pull-right btn-xs" data-toggle="modal" href='#modal-id-1'>Info.</a>
+                        {{!-- <button onclick="genPDF2();" class="btn btn-default btn-xs pull-right"><i
+                                class="fa fa-download"></i> Generar PDF</button> --}}
+
+                        {{#ifeq genpdf 'si'}}<a
+                            href="/inspeccion/registro_asistencia/reportePDF?iduser={{../iduser}}&fecha_desde={{../fecha_desde}}&fecha_hasta={{../fecha_hasta}}&ic={{../icc}}"
+                            target="_blank" class="btn btn-default btn-xs pull-right"><i class="fa fa-download"></i>
+                            Generar
+                            PDF</a>{{/ifeq}}
+
+
+
+                    </h3>
+                    <div class="modal fade" id="modal-id-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Información de <b>Reporte de novedades</b></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Utilíce esta herramienta para consular la novedades por Inspector de curso.</p>
+                                    <p>
+
+                                        Para realizar la consulta, seleccione el Inspector y a continuación determine un
+                                        rango
+                                        de
+                                        fechas a consultar, si la consulta corresponde a un único día
+                                        basta establecer la fecha en el campo <b>Fecha desde</b>, el sistema
+                                        automáticamente
+                                        genera
+                                        la consulta del día seleccionado.
+                                    </p>
+
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>
+                                <b>Generado por: </b>{{user.fullname}} <br>
+                                <b>Inspector de curso: </b>{{icc}} <br>
+                                <b>Fecha: </b>{{fecha_desde}} <br>
+                                <b>Hasta: </b>{{fecha_hasta}} <br> <br>
+                            </p>
+
+                        </div>
+
+                        <div class="col-lg-12">
+                            <form action="/inspeccion/registro_asistencia" id="formu" class="ui form" method="GET">
+                                <div class="ui error message"></div>
+                                <div class="four fields">
+                                    <div class="field">
+                                        <label for="">Inspector</label>
+                                        <select class="ui fluid search dropdown" name="iduser">
+                                            <option value="" selected>Seleccione...</option>
+                                            {{#each ic}}
+                                            <option value="{{iduser}}" {{#ifeq ../idic iduser}}selected{{/ifeq}}>
+                                                {{fun_nombres}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                    <div class="field">
+                                        <label for="">Fecha desde</label>
+                                        <div class="input-group date" data-provide="datepicker">
+                                            <input type="text" class="form-control" name="fecha_desde"
+                                                value="{{fecha_desde}}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label for="">Fecha hasta</label>
+                                        <div class="input-group date" data-provide="datepicker">
+                                            <input type="text" class="form-control" name="fecha_hasta"
+                                                value="{{fecha_hasta}}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                        {{!-- <input type="date" placeholder="Search..." name="fecha_hasta">
+                                                                                        <button type="submit" class="ui icon button green">
+                                                                                            <i class="search icon"></i>
+                                                                                        </button> --}}
+                                    </div>
+                                    <div class="field">
+                                        <label for="">&nbsp;</label>
+                                        <button type="submit" class="btn btn-primary">Consultar</button>
+                                        <a href="/inspeccion/registro_asistencia" class="btn btn-default"
+                                            title="Recargar"><i class="fa fa-refresh"></i></a>
+                                    </div>
+
+                                </div>
+
+
+                            </form>
+                            <script>
+                                $(() => {
+                                    $(`#formu`).form({
+                                        fields: {
+                                            iduser: {
+                                                identifier: 'iduser',
+                                                rules: [{ type: 'empty', prompt: 'Seleccione el inspector de curso' }]
+                                            },
+                                            fecha_desde: {
+                                                identifier: 'fecha_desde',
+                                                rules: [{ type: 'empty', prompt: 'Seleccione la fecha inicial' }]
+                                            }
+
+                                        },
+                                        onSuccess: function (e) {
+                                            e.submit();
+                                        }
+                                    }).submit(function (e) {
+                                        e.preventDefault();
+                                    });
+                                })
+                            </script>
+                        </div>
+
+
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+
+                                {{> tableInasistenciaFuncionario}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(() => {
+
+        $('select.dropdown').dropdown();
+        $('.input-group.date').datepicker({
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            orientation: "top left",
+            autoclose: true,
+            language: "es"
+        });
+    })
+</script>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://localhost:3000/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="http://localhost:3000/bower_components/jquery/dist/jquery.min.js"></script>
+
+
+    <title>Notificación</title>
+    <style>
+        img.izquierda {
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        img.derecha {
+            float: right;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="">
+                    <p>
+                        <img src="http://localhost:3000/images/doce-Logo.png" class="izquierda" alt="Logo" width="60"
+                            height="60">
+                        <img src="http://localhost:3000/images/doce-Logo.png" class="derecha" alt="Logo" width="60"
+                            height="60">
+
+                    </p>
+
+                    <h4 class="text-center">
+                        UNIDAD EDUCATIVA "DOCE DE MAYO"<br>
+                        <small><b>FICHA INDIVIDUAL DEL ESTUDIANTE.</b></small>
+                        <p>
+                            <b> <small>Reporte correspondiente a las fechas:</small></b> <br>
+                            <small>Desde: {{fecha_desde}} - Hasta: {{fecha_hasta}}</small>
+                        </p>
+                        <!-- _____________________________________________________________________ -->
+                    </h4>
+
+                    <div class="row">
+                        <div class="col-sm-6 border-right">
+
+                            <div class="ui divided selection list">
+
+                                <a class="item">
+                                    <div class="ui basic blue horizontal label">APELLIDOS Y NOMBRES:</div>
+                                    {{alumno.alu_apellidos_nombres}}
+                                </a>
+                                <a class="item">
+                                    <div class="ui basic blue horizontal label">DOMICILIO:</div>
+                                    {{alumno.alu_direccion}}
+                                </a><br>
+                                <a class="item">
+                                    <div class="ui basic blue horizontal label">REPRESENTANTE:</div>
+                                    {{alumno.alu_representante_nombres}}
+                                    <div class="ui basic blue horizontal label">TELÉFONO:</div>
+                                    {{alumno.alu_representante_telefono}}
+                                </a><br>
+                            </div>
+
+
+
+
+                            <!-- /.description-block -->
+                        </div>
+                        <div class="col-sm-6 border-right">
+                            <div class="ui divided selection list">
+                                <a class="item">
+                                    <div class="ui basic blue horizontal label">NIVEL:</div>
+                                    {{alumno.niv_nivel}}
+                                    <div class="ui basic blue horizontal label">CURSO:</div>
+                                    {{alumno.cur_curso}}
+                                </a>
+                                <a class="item">
+                                    <div class="ui basic blue horizontal label">TUTOR:</div>
+                                    {{tutor.fun_nombres}}
+                                </a><br>
+                            </div>
+                            <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+
+
+                    </div>
+
+
+
+
+                    <div class="panel-body">
+                        {{#if inasistenciasTitulo}}
+                        <b>{{inasistenciasTitulo}}</b> <span class="text-right"></span>
+
+                        {{#if inasistencias}}
+
+
+
+                        </span> justificadas: <b>{{totalJustificadas}}</b> <b>/</b> injustificadas:
+                        <b>{{totalInjustificadas}}</b>
+                        <table class="table table small">
+                            <thead>
+                                <tr>
+                                    <th>id.</th>
+                                    <th>Fecha</th>
+                                    <th>Curso</th>
+                                    <th>Materia</th>
+                                    <th>Motivo</th>
+                                    <th>Est.</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each inasistencias}}
+                                <tr>
+                                    <td>{{idinasistencia}}</td>
+                                    <td>{{ina_fecha}}</td>
+                                    <td>{{curso}}</td>
+                                    <td>{{materia}}</td>
+                                    <td>{{ina_injust_comment}}</td>
+                                    <td>
+                                        {{justificada}}
+                                    </td>
+                                </tr>
+                                {{/each}}
+
+                            </tbody>
+                        </table>
+
+                        <!--
+                        <div class="text-center">
+                            ___________________________________________
+                        </div>
+                        -->
+                        {{else}} <br>
+                        No se encontraron inasistencias. <br>
+                        {{/if}}
+                        {{/if}}
+
+
+                        {{#if novedadesTitulo}}
+                        <b>{{novedadesTitulo}}</b> <span class="text-right"></span>
+                        {{#if novedades}}
+                        <br>
+                        <table class="table table small">
+                            <thead>
+                                <tr>
+                                    <th>id.</th>
+                                    <th>Fecha</th>
+                                    <th>Curso</th>
+                                    <th>Tipo</th>
+                                    <th>Materia</th>
+                                    <th>Asunto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each novedades}}
+                                <tr>
+                                    <td>{{idnovedad}}</td>
+                                    <td>{{nov_fecha}}</td>
+                                    <td>{{not_curso}}</td>
+                                    <td>{{nov_tipo}}</td>
+                                    <td>{{nov_materia}}</td>
+                                    <td>{{nov_asunto}}</td>
+                                </tr>
+                                {{/each}}
+
+                            </tbody>
+                        </table>
+
+                        {{else}}
+                        <br>Sin novedades.
+                        {{/if}}
+                        {{/if}}
+
+
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+</body>
+
+</html>

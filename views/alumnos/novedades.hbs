@@ -1,0 +1,105 @@
+<div class="ui dividing header">Novedades <a
+        href="/alumnos/novedades/generatePDF?fecha_desde={{fecha_desde}}&fecha_hasta={{fecha_hasta}}&user={{user.fullname}}"
+        class="btn btn-default pull-right btn-xs" target="_blank"><i class="fa fa-download"></i>Generar PDF</a> </div>
+<form action="/alumnos/novedades" id="formu" class="ui form" method="GET">
+    <div class="ui error message"></div>
+    <div class="four fields">
+
+        <div class="field">
+            <label for="">Fecha desde</label>
+            <div class="input-group date" data-provide="datepicker">
+                <input type="text" class="form-control" name="fecha_desde" value="{{fecha_desde}}">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label for="">Fecha hasta</label>
+            <div class="input-group date" data-provide="datepicker">
+                <input type="text" class="form-control" name="fecha_hasta" value="{{fecha_hasta}}">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+            {{!-- <input type="date" placeholder="Search..." name="fecha_hasta">
+                                                                                            <button type="submit" class="ui icon button green">
+                                                                                                <i class="search icon"></i>
+                                                                                            </button> --}}
+        </div>
+        <div class="field">
+            <label for="">&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Consultar</button>
+            <a href="/alumnos/novedades" type="submit" class="btn btn-default" title="Restablecer fecha"><i
+                    class="fa fa-refresh"></i></a>
+        </div>
+    </div>
+
+
+</form>
+<script>
+    
+    console.log(moment().format('MMMM Do YYYY, h:mm:ss a'))
+    $(() => {
+        $(`#formu`).form({
+            fields: {
+                iduser: {
+                    identifier: 'iduser',
+                    rules: [{ type: 'empty', prompt: 'Seleccione el alumno' }]
+                },
+                fecha_desde: {
+                    identifier: 'fecha_desde',
+                    rules: [{ type: 'empty', prompt: 'Seleccione la fecha inicial' }]
+                }
+
+            },
+            onSuccess: function (e) {
+                e.submit();
+            }
+        }).submit(function (e) {
+            e.preventDefault();
+        });
+    })
+</script>
+
+
+
+<div class="container">
+    {{>tableFichaNovedades}}
+</div>
+
+<script type="text/javascript">
+    $('#tbl_novedades').DataTable({
+        'pageLength': 15,
+        'order': [[0, 'desc']],
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+
+    });
+    $('.input-group.date').datepicker({
+        todayHighlight: true,
+        format: 'yyyy-mm-dd',
+        language: "es",
+        orientation: "top left",
+        autoclose: true
+    });
+
+</script>

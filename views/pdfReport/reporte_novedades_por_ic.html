@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="http://localhost:3000/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="http://localhost:3000/bower_components/jquery/dist/jquery.min.js"></script>
+    <title>Reporte de novedades</title>
+    <style>
+        img.izquierda {
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        img.derecha {
+            float: right;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    <img src="http://localhost:3000/images/doce-Logo.png" class="izquierda" alt="Logo" width="60"
+                        height="60">
+                    <img src="http://localhost:3000/images/doce-Logo.png" class="derecha" alt="Logo" width="60"
+                        height="60">
+
+                </p>
+                <h4 class="text-center">
+                    UNIDAD EDUCATIVA "DOCE DE MAYO"<br>
+                    <small><b>NOVEDADES POR INSPECTOR</b></small>
+                    <p>
+                        <small>Reporte correspondiente a las fechas: {{fecha_desde}} - {{fecha_hasta}}<br>
+                    </p>
+
+                </h4>
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+        <div class="col-lg-12"><br>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>INSPECTOR DE CURSO: </b>{{ic}}
+                    <span class="pull-right"><b>GENERADO POR: </b> {{username}}</span>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id.</th>
+                                <th>Fecha</th>
+                                <th>Profesor</th>
+                                <th>T.</th>
+                                <th>Materia</th>
+                                <th>Hora</th>
+                                <th>Curso</th>
+                                <th>Estado</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each inasistencias}}
+                            <tr>
+                                <td>{{idinasistencia_profesor}}</td>
+                                <td>{{ina_fecha}}</td>
+                                <td>{{fun_nombres}}</td>
+                                <td>
+                                    <span class="label">{{ina_tipo}}</span>
+                                </td>
+                                <td>{{mat_nombre}}</td>
+                                <td>{{ina_hora}}</td>
+                                <td>{{cur_curso}}</td>
+                                <td>{{estadoo}}</td>
+                                <td>{{motivo}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+                <div class="panel-footer">
+                    <b>Información: </b>
+                    <span class="label">F.H</span> Falta por hora
+                    <span class="label">F.D</span> Falta todo el día
+                    <span class="label">A</span> Atraso
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

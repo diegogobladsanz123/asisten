@@ -1,0 +1,38 @@
+<div class="ui dividing header">Cursos</div>
+
+
+<div class="row">
+
+    {{#each cci}}
+    <div class="col-lg-3 col-md-3 col-sm-6">
+        <div class="ui one column grid">
+            <div class="column">
+                <div class="ui raised segment">
+
+                    <a class="ui blue ribbon label">{{cur_curso}}</a> <small class="pull-right"><b>Nivel:
+                        </b>{{niv_nivel}}</small>
+
+                    <div class="ui divided selection list">
+                        <a class="item">
+                            <i class="fa fa-users"></i> Total alumnos: <span class="pull-right badge">1</span>
+                        </a>
+                        <a class="item">
+                            <i class="fas fa-book-open"></i> Total materias: <span class="pull-right badge">1</span>
+                        </a>
+                    </div>
+
+
+                    <a href="/inspeccion/getAlumnos/{{idcurso}}" class="btn btn-xs btn-info text-center">Ver lista</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {{/each}}
+
+
+
+
+
+
+</div>

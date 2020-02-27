@@ -1,0 +1,186 @@
+<!-- 
+<div class="callout callout-info">
+    <h4>En construcción</h4>
+
+    <p>
+        Esta página esta en cosntrucción.
+    </p>
+</div>
+-->
+<div class="panel panel-default">
+    <div class="panel-heading">Configuración - Año lectivo <a class="btn btn-primary btn-xs" data-toggle="modal"
+            href='#modal-id'>Crear</a></div>
+
+
+    <div class="modal fade" id="modal-id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Registrar año lectivo</h4>
+                </div>
+
+                <form action="/anio_lectivo/create" class="ui form" method="POST" id="frm-create">
+
+                    <div class="modal-body">
+
+                        <div class="field">
+                            <label for="">Nombre</label>
+                            <input type="text" placeholder="AÑO LECTIVO ____ - ____" name="anio_lectivo">
+                        </div>
+                        <div class="ui error message"></div>
+                        <div class="field">
+                            <div class="ui ignored positive message">
+                                <p>Una ves registrado el año lectivo, no se puede eliminar.</p>
+                                ¿Esta seguro que desea continuar? <br><br>
+                                <div class="required inline field">
+                                    <div class="ui checkbox checked">
+                                        <input type="checkbox" tabindex="0" class="hidden" name="continuar">
+                                        <label>Si</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                    <script>
+                        $(() => {
+                            $('#frm-create').form({
+                                fields: {
+                                    anio_lectivo: {
+                                        identifier: 'anio_lectivo',
+                                        rules: [
+                                            {
+                                                type: 'empty',
+                                                prompt: 'Por favor ingrese el nombre del año lectivo'
+                                            },
+                                            {
+                                                type: 'minLength[5]',
+                                                prompt: 'El minimo de caraceres es 5'
+                                            }]
+                                    },
+                                    continuar: {
+                                        identifier: 'continuar',
+                                        rules: [{ type: 'checked', prompt: 'Marque la casilla de verificación' }]
+                                    }
+                                },
+                                onSuccess: function (e) {
+                                    e.submit();
+                                }
+
+                            }).submit((e) => {
+                                e.preventDefault();
+                            })
+                        })
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <b>Estados:</b>
+
+        <ul>
+            <li><span class="label label-success">Activo</span> Los usuarios pueden realizar todas las operaciones
+                disponibles.<br></li>
+            <li><span class="label label-primary">Finalizado</span> Los usuarios pueden únicamente visualizar e imprimir
+                reportes.<br></li>
+        </ul>
+
+
+
+
+    </div>
+    <table class="table table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha registro </th>
+                <th>Titulo</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each al}}
+            <tr>
+                <td>{{idanio_lectivo}}</td>
+                <td>{{#timeago created_at}}{{/timeago}}</td>
+                <td><code>{{anio_lectivo}}</code></td>
+                <td>
+                    </span>
+                    {{#ifeq anio_state 1}}<span class="label label-success">Activo</span>{{/ifeq}}
+                    {{#ifeq anio_state 0}}Inactivo{{/ifeq}}
+                    {{#ifeq anio_state 2}} <span class="label label-primary">Finalizado</span>{{/ifeq}}
+
+                </td>
+                <td>
+                    {{#ifeq anio_state 1}}<a class="btn btn-default btn-xs btn-block" data-toggle="modal"
+                        href='#modal-finalizar-{{../idanio_lectivo}}'><i class="fa fa-check text-success"></i>
+                        Finalizar</a>{{/ifeq}}
+                    {{#ifeq anio_state 2}}<a class="btn btn-default btn-xs btn-block" data-toggle="modal"
+                        href='#modal-activar-{{../idanio_lectivo}}'><i class="text-success"></i> Activar</a>{{/ifeq}}
+
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+
+</div>
+<!--TODO: modal finalizar -->
+{{#each al}}
+
+<div class="modal fade" id="modal-activar-{{idanio_lectivo}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Activar</h4>
+            </div>
+            <div class="modal-body">
+                Desea activar el año lectivo: <code>{{anio_lectivo}}</code> ?
+            </div>
+            <form action="/anio_lectivo/activar/{{idanio_lectivo}}" method="POST">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Continuar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-finalizar-{{idanio_lectivo}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Finalizar</h4>
+            </div>
+            <div class="modal-body">
+                Desea finalizar el año lectivo: <code>{{anio_lectivo}}</code> ?
+            </div>
+            <form action="/anio_lectivo/finalizar/{{idanio_lectivo}}" method="POST">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Continuar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{/each}}
+<!--ENDTODO: modal finalizar -->
+<script>
+    $(document).ready(() => {
+        $('.ui .checkbox').checkbox();
+    })
+</script>

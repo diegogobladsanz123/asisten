@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://localhost:3000/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+
+    <title>Notificación</title>
+    <style>
+        img.izquierda {
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        img.derecha {
+            float: right;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <p>
+                        <img src="http://localhost:3000/images/doce-Logo.png" class="izquierda" alt="Logo" width="60"
+                            height="60">
+                        <img src="http://localhost:3000/images/doce-Logo.png" class="derecha" alt="Logo" width="60"
+                            height="60">
+
+                    </p>
+
+                    <h4 class="text-center">
+                        UNIDAD EDUCATIVA "DOCE DE MAYO"<br>
+                        DEPARTAMENTO DE INSPECCIÓN <br>
+                        <small><b>NOTIFICACIÓN #.</b> {{idnotificaciones}} </small>
+                    </h4>
+
+                    <div class="panel-body">
+                        <p>
+                            <b>Fecha: </b>{{not_fecha}} <br>
+                            Señor Padre de Familia del Estudiante <b>{{alu_apellidos_nombres}}</b>
+                            del curso <b>{{not_curso}}</b>, sirvase asistir a la Institución el día
+                            {{not_fecha_presentacion}}
+                        </p>
+                        <b>Motivo:</b>
+                        <ul>
+                            {{#each asunto}}
+                            <li>{{not_asunto}}</li>
+                            {{/each}}
+                        </ul>
+                        <br>
+                        <div class="text-center">
+                            ___________________________________________
+                            <br>
+                            {{not_tutor}}
+                            <br>
+                            <small><b>TUTOR</b></small>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

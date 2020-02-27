@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Roles de usuario {{!-- {{#btnAdd user.rol_crear '/rol'}}{{/btnAdd}} --}}
+            </div>
+            <div class="panel-body">
+                <table class="ui blue celled selectable table">
+                    <thead>
+                        <tr>
+                            <th>Rol</th>
+                            <th>Descripción</th>
+                            
+                            <th width="50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {{#each row}}
+                        {{#ifeq rol_nombre "Administrador"}}
+                        {{else}}
+                        <tr>
+                            <td> <code>{{../rol_nombre}} </code></td>
+                            <td>{{../rol_descripcion}}</td>
+                            
+                            <td>
+                        
+                                {{#btnEdit ../../user.rol_editar '/rol/edit/' ../idrol}}{{/btnEdit}}
+                        
+                                {{!-- {{#btnDelete ../user.rol_eliminar idrol rol_state}}{{/btnDelete}} --}}
+                                {{!-- {{#btnPrint 1 '/rol' idrol}}{{/btnPrint}}
+                                                        {{#btnShow 1 '/rol' idrol}}{{/btnShow}} --}}
+                            </td>
+                        </tr>
+                        {{/ifeq}}
+                        
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+
+        </script>
+
+    </div>
+</div>

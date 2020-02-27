@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nombre": "jean",
+        "email": "jean@gmail.com",
+        "estado": true
+    },
+    {
+        "id": 2,
+        "nombre": "maria",
+        "email": "maria@gmail.com",
+        "estado": true
+    },
+    {
+        "id": 3,
+        "nombre": "marco",
+        "email": "marco@gmail.com",
+        "estado": true
+    },
+    {
+        "id": 4,
+        "nombre": "lucas",
+        "email": "lucas@gmail.com",
+        "estado": true
+    },
+    {
+        "id": 5,
+        "nombre": "esdras",
+        "email": "esdras@gmail.com",
+        "estado": true
+    }
+]

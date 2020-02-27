@@ -1,0 +1,158 @@
+<table class="ui table compact selectable small" id="tbl_novedades">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            {{#ifeq ficha 1}}
+            {{else}}
+            <th>Curso</th>
+            <th>Alumno</th>
+            {{/ifeq}}
+            <th>Materia</th>            
+            <th>Asunto</th>            
+            <th>Inf.</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each novedades}}
+        <tr {{#ifeq nov_state 0}}class="negative" {{/ifeq}}>
+            <td>{{idnovedad}}</td>
+            <td>{{nov_fecha}}</td>
+            <td>
+                {{#ifeq nov_tipo 1}}
+                <span class="label label-default">Otros</span>
+                {{else}}
+                <span class="label label-primary">Atraso</span>
+                {{/ifeq}}
+            </td>
+            {{#ifeq ../ficha 1}}
+            {{else}}
+            <td>
+                {{../not_curso}}
+            </td>
+            <td>
+
+                <a href="/alumnos/ficha/{{../idalumno}}"><i class="fa fa-arrow-alt-circle-right"></i>
+                    {{../alu_apellidos_nombres}}</a>
+
+            </td>
+            {{/ifeq}}
+
+
+            <td>
+                {{nov_materia}}
+            </td>       
+            <td>
+                {{nov_asunto}}
+            </td>     
+            <td>
+                
+                <i class="fa fa-info-circle text-info" data-toggle="modal"
+                    data-target="#modal-inf-novedad-{{idnovedad}}"></i>
+                <!--TODO:inf novedad-->
+                <div class="modal fade" id="modal-inf-novedad-{{idnovedad}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Información</h4>
+                            </div>
+                            <div class="modal-body">
+                                <li><b>Tipo:</b>
+                                    {{#ifeq nov_tipo 1}}
+                                    <span class="label label-default">Otros</span>
+                                    {{else}}
+                                    <span class="label label-primary">Atraso</span>
+                                    {{/ifeq}}
+                                </li>
+                                <li><b>Asunto:</b>{{nov_asunto}}</li>
+                                <li><b>Materia:</b> {{nov_materia}}</li>
+                                <li><b>Fecha:</b> {{nov_fecha}}</li>
+                                <br>
+                                <small>
+                                    <p><b>Registrado por:</b> <br>{{user_fullname}}</p>
+                                </small>
+                                {{#ifeq nov_state 0}}
+                                <small>
+                                    <p>
+                                        <b>Eliminado por:</b> <br>{{../updated_fullname}} <br>
+                                        <b>Motivo:</b> <br>{{../del_comment}} <br>
+                                    </p>
+                                </small>
+                                {{/ifeq}}
+
+
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END inf novedad-->
+
+            </td>
+            <td>
+                {{#ifeq nov_state 1}}
+                {{#ifeq ../user_iduser ../../user.iduser}}
+
+                {{#btnDelNovedad ../../user.delNovedad '#modal-delete-2-' ../idnovedad ../nov_state ../../anio_state}}{{/btnDelNovedad}}
+                {{/ifeq}}
+                {{/ifeq}}
+                <div class="modal fade" id="modal-delete-2-{{idnovedad}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header alert-danger">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Eliminar novedad</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="field">
+                                    <label for="">Resumen de la información:</label>
+                                </div>
+
+                                <ul>
+                                    <li>{{alu_apellidos_nombres}}</li>
+                                    <li>{{nov_fecha}}</li>
+                                </ul>
+                                <p><b>Asunto:</b><br>
+                                    {{nov_asunto}}</p>
+                                <form action="/inspeccion/novedades/eliminar" method="POST"
+                                    id="frm_novedad_{{idnovedad}}" class="ui form">
+                                    <div class="col-md-10">
+                                        <div class="field">
+                                            <input type="text" required name="del_comment">
+                                        </div>
+                                    </div>
+                                    <br>
+                            </div>
+
+
+                            <div class="modal-footer">
+
+
+                                <input type="hidden" name="idnovedad" value="{{idnovedad}}" readonly>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+
+
+
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

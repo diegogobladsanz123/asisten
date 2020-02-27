@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <title>check all</title>
+</head>
+
+<body>
+    <table class="table" border="1">
+        <thead>
+            <tr>
+                <th>Coluna 1</th>
+                <th>Coluna 2</th>
+                <th><input type="checkbox" class="checkAll" name="checkAll" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr role="row">
+                <td>Texto 1</td>
+                <td>Texto 2</td>
+                <td><input type="checkbox" name="" /></td>
+            </tr>
+            <tr role="row">
+                <td>Texto 1</td>
+                <td>Texto 2</td>
+                <td><input type="checkbox" name="" /></td>
+            </tr>
+            <tr role="row">
+                <td>Texto 1</td>
+                <td>Texto 2</td>
+                <td><input type="checkbox" name="" /></td>
+            </tr>
+            <tr role="row">
+                <td>Texto 1</td>
+                <td>Texto 2</td>
+                <td><input type="checkbox" name="" /></td>
+            </tr>
+            <tr role="row">
+                <td>Texto 1</td>
+                <td>Texto 2</td>
+                <td><input type="checkbox" name="" /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $('.checkAll').on('click', function () {
+                $(this).closest('table').find('tbody :checkbox')
+                    .prop('checked', this.checked)
+                    .closest('tr').toggleClass('selected', this.checked);
+            });
+
+            $('tbody :checkbox').on('click', function () {
+                $(this).closest('tr').toggleClass('selected', this.checked); //Classe de seleção na row
+
+
+            });
+        });
+    </script>
+</body>
+
+</html>

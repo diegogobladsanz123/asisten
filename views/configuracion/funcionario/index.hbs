@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Funcionarios {{#btnAdd user.rol_crear '/funcionario/create'}}{{/btnAdd}}
+            </div>
+            <div class="panel-body">
+                <div class="table">
+                    <table class="ui compact striped table" id="table-funcionario">
+                        <thead>
+                            <tr>
+                                <th>ID.</th>
+                                <th>Funcionario</th>
+                                <th>Cédula</th>
+                                <th>Título</th>
+                                <th>Teléfono</th>
+
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each rows}}
+                            <tr {{#ifeq fun_state 0 }}class="error" {{/ifeq}}>
+                                <td>{{idfuncionario}}</td>
+                                <td>{{fun_nombres}}</td>
+                                <td>{{fun_cedula}}</td>
+                                <td>{{fun_titulo}}</td>
+                                <td>
+                                    {{fun_telefono}}
+                                </td>
+
+                                <td>
+                                    {{#btnEdit ../user.rol_editar '/funcionario/edit/' idfuncionario}}{{/btnEdit}}
+                                    {{#btnDelete ../user.rol_eliminar idfuncionario fun_state}}{{/btnDelete}}
+
+
+
+                                    <div class="modal fade" id="modal-delete-{{idfuncionario}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header alert-danger">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">Desactivar</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Esta seguro que desea desactivar el registro
+                                                    <code>{{fun_nombres}}</code>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">Cancelar</button>
+                                                    <a href="/funcionario/delete/{{idfuncionario}}"
+                                                        class="btn btn-danger">Desactivar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th><b> Funcionario</b></th>
+                                <th><b>Cédula</b></th>
+                                <th><b>Título</b></th>
+                                <th><b>Teléfono</b></th>
+                                <th></th>
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+        </script>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#table-funcionario').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+    });
+</script>

@@ -1,0 +1,142 @@
+a
+<table class="ui table compact selectable small" id="tbl-notificacion">
+    <thead>
+        <tr>
+            <th>Numero</th>
+            <th>Fecha</th>
+            {{#ifeq ficha 1}}
+            {{else}}
+            <th>Curso</th>
+            <th>Alumno</th>
+            {{/ifeq}}
+            <th>Motivo</th>
+            <th>Inf.</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each notificaciones}}
+        <tr {{#ifeq not_estado 0}}class="negative" {{/ifeq}}>
+            <td>{{idnotificaciones}}</td>
+            <td>{{not_fecha}}</td>
+            {{#ifeq ../ficha 1}}
+            {{else}}
+            <td>{{../not_curso}}</td>
+            <td>
+                <a href="/alumnos/ficha/{{../idalumno}}"><i class="fa fa-arrow-alt-circle-right"></i>
+                    {{../alu_apellidos_nombres}}</a>
+            </td>
+            {{/ifeq}}
+            <td>
+
+                {{#each ../detalleNotificaciones}}
+
+                {{#ifeq ../idnotificaciones notificaciones_idnotificaciones}}
+
+                <span class="badge">{{../not_asunto}}</span>&nbsp;
+
+                {{/ifeq}}
+                {{/each}}
+
+            </td>
+            <td>
+                <i class="fa fa-info-circle text-info" data-toggle="modal"
+                    data-target="#modal-inf-notif-{{idnotificaciones}}"></i>
+                <!--TODO:inf novedad-->
+                <div class="modal fade" id="modal-inf-notif-{{idnotificaciones}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Información</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <li><b>Alumno:</b> {{alu_apellidos_nombres}}</li>
+                                <li><b>Fecha registro: </b>{{not_fecha}}</li>
+                                <li><b>Fecha presentación: </b>{{not_fecha_presentacion}}</li>
+                                <li><b>Tutor:</b> {{not_tutor}}</li>
+                                <br>
+                                <small>
+                                    <p><b>Registrado por:</b> <br>{{user_fullname}}</p>
+                                </small>
+                                {{#ifeq not_estado 0}}
+                                <small>
+                                    <p>
+                                        <b>Eliminado por:</b> <br>{{../updated_fullname}} <br>
+                                        <b>Motivo:</b> <br>{{../del_comment}} <br>
+                                    </p>
+                                </small>
+                                {{/ifeq}}
+
+
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                                <a href="/notificacion/get/{{idnotificaciones}}" target="_blank" class="btn btn-primary"
+                                    rel="noopener noreferrer">Imprimir</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END inf novedad-->
+            </td>
+
+            <td>
+
+
+                {{#ifeq user_iduser ../user.iduser}}
+                {{#btnDelNotificacion ../../user.delNotif '#modal-delete-notificacion-' ../idnotificaciones ../not_estado ../../anio_state}}{{/btnDelNotificacion}}
+                {{/ifeq}}
+
+
+                <!--TODO: modal eliminar notificacion -->
+                <div class="modal fade" id="modal-delete-notificacion-{{idnotificaciones}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header  alert-danger">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Eliminar notificación</h4>
+                            </div>
+                            <div class="modal-body">
+                                Detalle:
+                                <ul>
+                                    <li><b>Fecha: </b>{{not_fecha}}</li>
+                                    <li><b>Alumno: </b>{{alu_apellidos_nombres}}</li>
+                                    <li><b>Tutor: </b>{{not_tutor}}</li>
+                                    <li><b>Fecha registro: </b>{{not_fecha}}</li>
+                                    <li><b>Fecha presentación: </b>{{not_fecha_presentacion}}</li>
+
+                                </ul>
+                                <form action="/notificacion/delete/{{idnotificaciones}}" method="POST" class="ui form">
+                                    <div class="col-lg-10">
+                                        <div class="field">
+                                            <label for="">Motivo</label>
+                                            <input type="text" name="del_comment" required>
+                                        </div>
+                                    </div>
+                            </div>
+                            <br>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--END: modal eliminar notificación-->
+            </td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

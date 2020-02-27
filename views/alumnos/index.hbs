@@ -1,0 +1,319 @@
+<div class="ui dividing header">
+    Listado de alumnos <a class="btn btn-primary pull-right" data-toggle="modal" href='#modal-id-inf1'>Info.</a>
+    {{#btnAdd user.rol_crear '/alumnos/create'}}{{/btnAdd}}
+</div>
+
+
+<div class="modal fade" id="modal-id-inf1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Información</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    En este apartado puede ver el listado de alumnos, la lista puede variar dependiendo del usuario, por
+                    lo tanto tenga en
+                    cuenta las siguientes consideraciónes:
+                </p>
+                <ul>
+                    <li><b>Administrador: </b>Puede visualizar el listado completo de estudiantes.</li>
+                    <li><b>Inspector general: </b>Puede visualizar el listado completo de estudiantes.</li>
+                    <li><b>Inspector de curso: </b>Puede visualizar únicamente los alumnos que corresponden a los cursos
+                        que están bajo su responsabilidad.</li>
+                </ul>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{{#ifeq user.idrol 3}}
+{{else}}
+<div class="row">
+
+    <form action="/alumnos" class="ui form" method="GET">
+
+
+        <div class="col-lg-4 col-md-4">
+            <div class="field">
+                <label for="">Buscar por curso:</label>
+                <select class="ui fluid search dropdown" name="idcurso" id="">
+                    <option value="" selected>Seleccione...</option>
+                    {{#each ../cursos}}
+                    <option value="{{idcurso}}">{{cur_curso}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+
+            <label for="">Buscar por alumno:</label>
+
+
+            <input type="hidden" readonly name="page" value="1">
+            <input type="hidden" readonly name="limit" value="50">
+
+
+            <div class="field">
+                <div class="ui fluid icon input">
+                    <input type="text" placeholder="Cédula / Nombre" name="searchText">
+                    <i class="user icon"></i>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div class="field">
+                <label for="">&nbsp;</label>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+
+            </div>
+
+
+        </div>
+
+
+    </form>
+
+</div>
+{{/ifeq}}
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Custom Tabs -->
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Resultado busqueda <span class="badge">{{total_registros}}</span></a></li>
+                {{#ifeq user.idrol 3}}
+                {{else}}
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Alumnos nuevos <span class="badge">{{../total_registros_sin_matricula}}</span></a></li>
+                {{/ifeq}}
+
+
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                    
+                    
+                    <table class="ui table celled selectable very compact small" {{#ifeq user.idrol 3}}
+                        id="table_alumnos" {{/ifeq}}>
+                        <thead>
+                            <tr>
+                                <th>Id.</th>
+                                <th>cedula</th>
+                                <th>Nombres</th>
+                                <th>Curso</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="table_body">
+                            {{#each results.results}}
+                            <tr {{#ifeq alu_estado 0}}
+                                class="negative {{#ifeq ../../user.rol_idrol 1}}{{else}}disabled{{/ifeq}}"
+                                title="Alumno inactivo" {{/ifeq}}>
+                                <td>{{idalumno}}</td>
+                                <td>{{alu_cedula}}</td>
+                                <td>
+                                    {{#ifeq alu_estado 1}}
+                                    {{#ifeq ../../user.idrol 1}}
+                                    <a class="btn btn-danger btn-xs pull-right" title="Deshabilitar alumno"
+                                        data-toggle="modal" href='#modal_desactivar_{{../idalumno}}'><i
+                                            class="fa fa-minus"></i> </a>
+                                    {{/ifeq}}
+                                    {{/ifeq}}
+                                    {{#ifeq alu_estado 0}}
+                                    {{#ifeq ../../user.idrol 1}}
+                                    <a class="btn btn-default btn-xs pull-right" title="Habilitar alumno"
+                                        data-toggle="modal" href='#modal_activar_{{../idalumno}}'><i
+                                            class="fa fa-check"></i> </a>
+                                    {{/ifeq}}
+                                    {{/ifeq}}
+                                    <i class="fa fa-arrow-alt-circle-right"></i>
+                                    {{alu_apellidos_nombres}}
+                                    <span
+                                        class="pull-right">{{#btnEdit ../user.rol_editar '/alumnos/edit/' idalumno}}{{/btnEdit}}</span>&nbsp;&nbsp;
+
+
+                                    <a href="/alumnos/ficha/{{idalumno}}" class="pull-right"><span
+                                            class="btn btn-primary btn-xs" title="Ver ficha del estudiante"><i
+                                                class="fa fa-credit-card"></i>&nbsp; Ficha</span></a>
+
+
+
+                                    <div class="modal fade" id="modal_desactivar_{{idalumno}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">Deshabilitar alumno</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    El alumno <b>{{alu_apellidos_nombres}}</b> sera deshabilitado. <br>
+                                                    ¿Desea
+                                                    continuar?
+                                                    <input type="hidden" readonly name="nalumno"
+                                                        value="{{alu_apellidos_nombres}}">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/alumnos/desactivarAlumno/{{idalumno}}" method="POST">
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">No</button>
+                                                        <button type="submit" class="btn btn-danger">Si</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="modal_activar_{{idalumno}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">Habilitar alumno</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    El alumno <b>{{alu_apellidos_nombres}}</b> sera habilitado. <br>
+                                                    ¿Desea
+                                                    continuar?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/alumnos/activarAlumno/{{idalumno}}" method="POST">
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">No</button>
+                                                        <button type="submit" class="btn btn-success">Si</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td><a {{#ifeq ../user.idrol 1}} href="/curso/edit/{{../idcurso}}" {{/ifeq}}
+                                        class="ui teal tag label">{{cur_curso}}</a></td>
+
+                            </tr>
+                            {{/each}}
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.tab-pane -->
+                <div class="tab-pane" id="tab_2">
+                    <table class="ui table celled selectable very compact small" id="">
+                        <thead>
+                            <tr>
+                                <th>Id.</th>
+                                <th>cedula</th>
+                                <th>Nombres</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="table_body">
+                            {{#each sinMatricula}}
+                            <tr>
+                                <td>{{idalumno}}</td>
+                                <td>{{alu_cedula}}</td>
+                                <td>
+                                    <i class="fa fa-arrow-alt-circle-right"></i>
+                                    {{alu_apellidos_nombres}}
+                                    <span
+                                        class="pull-right">{{#btnEdit ../user.rol_editar '/alumnos/edit/' idalumno}}{{/btnEdit}}</span>&nbsp;&nbsp;
+                                </td>
+
+                            </tr>
+                            {{/each}}
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.tab-pane -->
+
+            </div>
+            <!-- /.tab-content -->
+        </div>
+        <!-- nav-tabs-custom -->
+    </div>
+</div>
+
+<div class="row text-center">
+    <ul class="pagination no-margin">
+
+        {{#if results.previous}}
+        <li><a href="/alumnos?page={{results.previous.page}}&limit=15">« Anterior</a></li>
+        <li><a href="/alumnos?page=1&limit=40"> Inicio</a></li>
+
+        {{/if}}
+        <li><a>&nbsp;</a></li>
+        {{#if results.next}}
+        <li><a href="/alumnos?page={{results.next.page}}&limit=40">» Siguiente</a></li>
+
+
+        {{/if}}
+    </ul>
+</div>
+<script type="text/javascript">
+    $(document).ready(() => {
+        $('#table_alumnos').DataTable({
+            "pageLength": 15
+        });
+
+
+        $('.ui.dropdown').dropdown();
+    })
+    let tabla_body = document.querySelector('#table_body');
+    function obtener() {
+        /*fetch('/alumnos/getAll').then(res => res.json()).then(datos => {
+            console.log(datos);
+        }); */
+        let search = `<div class="ui active inline loader" id="searchSpinner"></div>`;
+
+        $.ajax({
+            beforeSend: function () {
+                $('#div_search').append(search);
+                tabla_body.innerHTML = '';
+            },
+            url: '/alumnos/getAll',
+            type: 'get',
+            success: function (res) {
+
+                tabla(res);
+                if ($('#searchSpinner')) {
+                    $('#searchSpinner').remove();
+                }
+
+            },
+            error: function (jqXHR, status, error) {
+                console.log(error);
+                if ($('#searchSpinner')) {
+                    $('#searchSpinner').remove();
+                }
+            },
+            complete: function (jqXHR, status, error) {
+
+            }
+
+        });
+
+    }
+    function tabla(datos) {
+        for (let valor of datos) {
+            //console.log(valor.alu_apellidos_nombres);
+            tabla_body.innerHTML += `<tr><td>${valor.alu_apellidos_nombres}</td></tr>`
+
+        }
+    }
+</script>

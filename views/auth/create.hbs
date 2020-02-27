@@ -1,0 +1,164 @@
+<div class="ui centered grid">
+    <div class="sixteen wide column ">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Registrar usuario
+            </div>
+            <form action="/users" method="post" class="ui form" id="frm_user">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-10">
+                            <div class="ui error message"></div>
+                            <div class="field">
+                                <input type="hidden" placeholder="Nombre completo" name="fullname" id="fullname">
+                                <label for="">Propietario de la cuenta</label>
+                                <select class="ui fluid search dropdown" name="profesor_idprofesor"
+                                    id="profesor_idprofesor">
+                                    <option value="" selected>Seleccione...</option>
+                                    {{#fun}}
+                                    <option value="{{idfuncionario}}">{{fun_nombres}}</option>
+                                    {{/fun}}
+                                </select>
+                            </div>
+
+                            <div class="field">
+                                <label for="">Username</label>
+                                <div class="ui right labeled input">
+                                    <input type="text" placeholder="Username" name="username">
+                                    <div class="ui corner label">
+                                        <i class="asterisk icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="">Contraseña</label>
+                                <input type="password" placeholder="••••••••••••••••" name="password">
+                            </div>
+                            <div class="field">
+                                <label for="">Verificar contraseña </label>
+                                <input type="password" placeholder="••••••••••••••••" name="password2">
+                            </div>
+
+                            <div class="field">
+                                <label for="">Rol</label>
+                                <select class="ui fluid search dropdown" name="rol_idrol">
+                                    {{#each rol}}
+                                    <option value>Seleccione...</option>
+                                    <option value="{{idrol}}">{{rol_nombre}}</option>
+                                    {{/each}}
+                                </select>
+                                <div class="ui pointing red basic label">
+                                    Seleccione el rol. <a href="/rol"><i class="fa fa-info-circle"></i> </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+
+                    <div class="text-center">
+                        <span class="btn btn-default" id="btn_reset">Limpiar</span>
+                        <button class="btn btn-primary">Guardar</button>
+                        <a href="/users" class="btn btn-default">Cancelar</a>
+
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('select.dropdown').dropdown();
+    })
+
+    $('#btn_reset').click(() => {
+        $('#frm_user').form('clear');
+    })
+    $('#profesor_idprofesor').change((event) => {
+        let profesor_idprofesor = $('#profesor_idprofesor option:selected').text();
+        if (profesor_idprofesor !== "Seleccione...") {
+            $('#fullname').prop('readonly', true);
+            $('#fullname').val(profesor_idprofesor);
+        } else {
+            //   $('#fullname').prop('readonly', false);
+            document.getElementById('fullname').readOnly = false;
+            $('#fullname').val('');
+        }
+
+
+
+    })
+
+    $(() => {
+        $('#frm_user').form({
+            fullname: {
+                identifier: 'fullname',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingrese el nombre completo de la cuenta de usuario'
+                    }
+                ]
+            },
+            username: {
+                identifier: 'username',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingrese el username'
+                    }
+                ]
+            },
+
+            password: {
+                identifier: 'password',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingrese la contraseña'
+                    },
+                    {
+                        type: 'minLength[6]',
+                        prompt: 'Ingrese una contraseña de minimo 6 caracteres'
+                    }
+                ]
+            },
+            password2: {
+                identifier: 'password2',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'El campo de verificación de contraseña se encuentra vacío.'
+                    }, {
+                        type: 'match[password]',
+                        prompt: 'Las contraseñas no coinciden.'
+                    }
+                ]
+            },
+            rol_idrol: {
+                identifier: 'rol_idrol',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Por favor seleccione el rol.'
+                    }
+                ]
+            },
+            profesor_idprofesor: {
+                identifier: 'profesor_idprofesor',
+                rules: [{ type: 'empty', prompt: 'El propietario de la cuenta es requerido.' }]
+            },
+            anio_lectivo: {
+                identifier: 'anio_lectivo',
+                rules: [{ type: 'empty', prompt: 'Por favor elija el año lectivo que desea asignar.' }]
+            }
+
+        })
+    })
+</script>

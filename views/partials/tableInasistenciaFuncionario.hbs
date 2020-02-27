@@ -1,0 +1,335 @@
+Información:
+<span class="badge">F.H</span> Falta por hora
+<span class="badge bg-red">F.D</span> Falta todo el día
+<span class="badge bg-blue">A</span> Atraso
+<table class="ui blue table selectable compact small" id="table_inasistencia">
+    <thead>
+        <tr>
+            <th>#num.</th>
+            <th>Fecha</th>
+            <th>Profesor</th>
+            <th>T.</th>
+            <th>Materia</th>
+            {{!-- <th>Tipo</th> --}}
+            <th>Hora</th>
+            <th>Curso</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <!---->
+        {{#each inasistencias}}
+        <tr {{#ifeq justificado 1}} class="positive" {{/ifeq}}{{#ifeq ina_estado 0}}class="negative" {{/ifeq}}>
+            <td>{{idinasistencia_profesor}}</td>
+            <td>{{ina_fecha}}</td>
+            <td>{{fun_nombres}}</td>
+            <td>
+                {{#ifeq ina_tipo 3}}
+                <span class="badge bg-blue">A</span>
+                {{/ifeq}}
+                {{#ifeq ina_tipo 1}}
+                <span class="badge bg-red">F.D</span>
+                {{/ifeq}}
+                {{#ifeq ina_tipo 2}}
+                <span class="badge bg-warning">F.H</span>
+                {{/ifeq}}
+            </td>
+            <td>
+
+                {{#ifeq mat_nombre 'FALTA TODO EL DÍA'}}
+                <span class="badge bg-red">{{../mat_nombre}}</span><BR>
+                {{#ifeq ../justificado 1}}
+                {{../justificado_coment}}
+                {{else}}
+                {{../injustificado_coment}}
+                {{/ifeq}}
+                {{else}}
+                <span class="badge">{{../mat_nombre}}</span><BR>
+                {{#ifeq ../justificado 1}}
+                {{../justificado_coment}}
+                {{else}}
+                {{../injustificado_coment}}
+                {{/ifeq}}
+                {{/ifeq}}
+
+
+            </td>
+            <!--
+
+            
+            <td class="text-center">
+                {{#ifeq ina_tipo 2}}<span class="">FALTA/HORA</span>{{/ifeq}}
+                {{#ifeq ina_tipo 3}}<span class="">ATRASO/HORA</span>{{/ifeq}}
+                
+            </td>
+            
+                -->
+            <td>{{ina_hora}}</td>
+            <td>{{cur_curso}}</td>
+
+
+            <td>
+                {{#ifeq ina_estado 0}}
+                <a class="fa fa-times text-red negative" data-toggle="modal"
+                    href='#modal-{{../idinasistencia_profesor}}'></a>
+                {{else}}
+                {{#ifeq ../justificado 0}}
+                <a class="fa fa-minus text-red negative" data-toggle="modal"
+                    href='#modal-{{../idinasistencia_profesor}}'></a>
+                {{else}}
+                <a class="fa fa-check text-green negative" data-toggle="modal"
+                    href='#modal-{{../idinasistencia_profesor}}'></a>
+                {{/ifeq}}
+                {{/ifeq}}
+
+
+
+
+
+
+                <div class="modal fade" id="modal-{{idinasistencia_profesor}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Detalle inasistencia.</h4>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li><b>Curso:</b>{{cur_curso}}{{#ifeq ina_tipo 1}}<span
+                                            class="text-center"><code>FALTA TODO EL DÍA</code></span>{{/ifeq}}</li>
+                                    <li><b>Hora:</b>{{ina_hora}}{{#ifeq ina_tipo 1}}<span
+                                            class="text-center"><code>FALTA TODO EL DÍA</code></span>{{/ifeq}}</li>
+                                </ul>
+
+
+
+
+                                <ul>
+                                    {{#ifeq justificado 0}}
+                                    {{#ifeq ../ina_tipo 1}}
+                                    <li><b>Estado:</b> Novedad Injustificada</li>
+                                    <li><b>Materia:</b> {{../mat_nombre}}</li>
+                                    <li><b>Fecha:</b> {{../ina_fecha}}</li>
+                                    <li><b>Comentario:</b> {{../injustificado_coment}}</li>
+                                    {{/ifeq}}
+                                    {{#ifeq ../ina_tipo 2}}
+                                    <li><b>Estado:</b> Novedad Injustificada</li>
+                                    <li><b>Materia:</b> {{../mat_nombre}}</li>
+                                    <li><b>Fecha:</b> {{../ina_fecha}}</li>
+                                    <li><b>Comentario:</b> {{../injustificado_coment}}</li>
+                                    {{/ifeq}}
+                                    {{/ifeq}}
+                                    {{#ifeq justificado 1}}
+                                    {{#ifeq ../ina_tipo 1}}
+                                    <li><b>Estado:</b> Novedad Justificada</li>
+                                    <li><b>Materia:</b> {{../mat_nombre}}</li>
+                                    <li><b>Fecha:</b> {{../ina_fecha}}</li>
+                                    <li><b>Comentario:</b> {{../justificado_coment}}</li>
+                                    <br>
+                                    <small>
+                                        <p>
+                                            <b>Justificada por:</b> <br>
+                                            {{../updated_fullname}} <br>
+                                            <b>Motivo:</b> <br>{{../justificado_coment}}
+                                        </p>
+                                    </small>
+                                    {{/ifeq}}
+                                    {{#ifeq ../ina_tipo 2}}
+                                    <li><b>Estado:</b> Novedad Justificada</li>
+                                    <li><b>Materia:</b> {{../mat_nombre}}</li>
+                                    <li><b>Fecha:</b> {{../ina_fecha}}</li>
+                                    <li><b>Comentario:</b> {{../justificado_coment}}</li>
+                                    <br>
+                                    <small>
+                                        <p>
+                                            <b>Justificada por:</b> <br>
+                                            {{../updated_fullname}} <br>
+                                            <b>Motivo:</b> <br>{{../justificado_coment}}
+                                        </p>
+                                    </small>
+                                    {{/ifeq}}
+                                    {{/ifeq}}
+                                    {{#ifeq ina_tipo 3}}
+                                    <li><b>Tipo: </b>Atraso</li>
+                                    <li><b>Materia:</b> {{../mat_nombre}}</li>
+                                    <li><b>Fecha:</b> {{../ina_fecha}}</li>
+                                    {{/ifeq}}
+                                    {{#ifeq ina_estado 0}}
+                                    <br>
+                                    <small>
+                                        <p>
+                                            <b>Eliminado por:</b> <br>{{../updated_fullname}} <br>
+                                            <b>Motivo:</b> <br>{{../eliminado_coment}}
+                                        </p>
+                                    </small>
+                                    {{/ifeq}}
+
+                                    <small> <br>
+                                        <p><b>Registrado por:</b> <br>{{user_fullname}}</p>
+                                    </small>
+
+
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+
+            <td>
+
+                {{#ifeq justificado 0}}
+                {{#ifeq ../../user.idrol 42}}
+                {{#ifeq ../ina_estado 1}}
+                {{#btnJustificar 1 'modal-justificar-' ../idinasistencia_profesor}}{{/btnJustificar}}
+                {{/ifeq}}
+                {{/ifeq}}
+
+                {{#ifeq ../../user.iduser ../idic}}
+                {{#btnDelete ../../user.rol_eliminar ../idinasistencia_profesor ../ina_estado}}{{/btnDelete}}
+                {{/ifeq}}
+
+
+                {{/ifeq}}
+
+                <!--TODO:MODAL JUSTIFICAR FALTAs-->
+                <div class="modal fade" id="modal-justificar-{{idinasistencia_profesor}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header alert-success">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title">Justificar falta</h4>
+                            </div>
+                            <form action="/profesores/justFalta/{{idinasistencia_profesor}}" class="ui form"
+                                id="form-justificar-{{idinasistencia_profesor}}" method="post">
+
+                                <div class="modal-body">
+                                    <div class="field">
+                                        <label for="">Resumen de la información:</label>
+                                    </div>
+                                    <ul>
+                                        <li><b>Docente:</b> {{fun_nombres}}</li>
+                                        <li><b>Fecha:</b> {{ina_fecha}}</li>
+                                        <li><b>Materia: </b> {{mat_nombre}}</li>
+                                        <li><b>Motivo: </b> {{injustificado_coment}}</li>
+                                    </ul>
+                                    <div class="col-md-11">
+                                        <div class="required field">
+                                            <label for="">Fecha</label>
+                                            <input type="date" name="justificado_fecha">
+                                        </div>
+                                    </div>
+                                    <div class="required field">
+                                        <label for="">Justificación:</label>
+                                        <textarea name="justificado_coment" style="width:95%" rows="2"></textarea>
+                                    </div>
+                                    <div class=" ui error message"></div>
+
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Continuar</button>
+                                </div>
+                                <script type="text/javascript">
+                                    $(() => {
+                                        $(`#form-justificar-{{idinasistencia_profesor}}`).form({
+                                            fields: {
+                                                justificado_fecha: {
+                                                    identifier: 'justificado_fecha',
+                                                    rules: [{ type: 'empty', prompt: 'Seleccione la fecha.' }]
+                                                },
+                                                justificado_coment: {
+                                                    identifier: 'justificado_coment',
+                                                    rules: [
+                                                        { type: 'empty', prompt: 'El campo justificación es requerido' },
+                                                        { type: 'maxLength[100]', prompt: 'Ingrese un maximo de 100 caracteres.' },
+                                                    ]
+                                                }
+                                            },
+                                            onSuccess: function (e) {
+                                                e.submit();
+                                            }
+                                        }).submit(function (e) {
+                                            e.preventDefault();
+                                        });
+                                    })
+                                </script>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!--END:MODAL JUSTIFICAR FALTA-->
+
+                {{!-- TODO:Modal eliminar --}}
+                <div class="modal fade" id="modal-delete-{{idinasistencia_profesor}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header alert-danger">
+                                <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Eliminar inasistencia</h4>
+                            </div>
+                            <div class="modal-body">
+                                Resumen de la información:
+                                <ul>
+                                    <li><b>Docente:</b> {{fun_nombres}}</li>
+                                    <li><b>Fecha: </b> {{ina_fecha}}</li>
+
+                                    <li><b>Materia: </b>{{mat_nombre}} <b>Hora:</b> {{ina_hora}} </li>
+                                    <li><b>Motivo: </b>{{injustificado_coment}} </li>
+
+                                </ul>
+                            </div>
+                            <form action="/profesores/delFalta/{{idinasistencia_profesor}}"
+                                id="frm-eliminar-{{idinasistencia_profesor}}" method="POST" class="ui form">
+
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <div class="ui error message"></div>
+                                    <div class="field">
+                                        <label for="">Motivo</label>
+                                        <input type="text" name="eliminado_coment">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </div>
+                                <script type="text/javascript">
+
+                                    $(() => {
+                                        $(`#frm-eliminar-{{idinasistencia_profesor}}`).form({
+                                            fields: {
+                                                eliminado_coment: {
+                                                    identifier: 'eliminado_coment',
+                                                    rules: [{ type: 'empty', prompt: 'Ingrese el motivo.' }]
+                                                }
+                                            },
+                                            onSuccess: function (e) {
+                                                e.submit();
+                                            }
+                                        }).submit(function (e) {
+                                            e.preventDefault();
+                                        });
+                                    })
+                                </script>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{!-- END:Modal eliminar --}}
+            </td>
+        </tr>
+        {{/each}}
+
+    </tbody>
+</table>

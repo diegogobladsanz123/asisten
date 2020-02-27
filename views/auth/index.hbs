@@ -1,0 +1,151 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Listado de usuarios {{#btnAdd user.rol_crear '/users/create'}}{{/btnAdd}} </div>
+    <div class="panel-body">
+        <table class="ui blue celled selectable table" id="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Nombre Completo</th>
+                    <th>Rol</th>
+                    <th>Año lectivo</th>
+                    <th width="80px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                {{#each row}}
+                <tr {{#ifeq user_state 0}}class="bg-danger" {{/ifeq}}>
+                    <td class="warning">{{iduser}}</td>
+
+                    <td class="warning"><code>{{username}}</code></td>
+                    <td>
+
+                        {{#ifeq iduser 1}}
+                        <code>
+                                                    {{../fullname}}
+                                            </code>
+
+                        {{else}}
+                        {{#ifeq ../../user.idrol 1}}
+                        <a
+                            href="/funcionario/edit/{{../profesor_idprofesor}}">{{../fullname}}</a>{{else}}{{../fun_nombres}}{{/ifeq}}
+                        {{/ifeq}}
+
+
+                    </td>
+                    <!--nombre completo-->
+
+
+                    <td>
+                        <!--rol-->{{#ifeq rol_nombre 'Administrador'}}<span
+                            class="badge bg-red">{{../rol_nombre}}</span>{{/ifeq}}
+                        <!--rol-->{{#ifeq rol_nombre 'Inspector de curso'}}<span
+                            class="badge">{{../rol_nombre}}</span>{{/ifeq}}
+                        {{#each ../ins}}
+                        {{#ifeq ../iduser user_iduser}}
+                        <span class="label label-default">{{../cur_curso}}</span><br>
+                        {{/ifeq}}
+                        {{/each}}
+                        <!--rol-->{{#ifeq rol_nombre 'Inspector general'}}<span
+                            class="badge bg-blue">{{../rol_nombre}}</span>{{/ifeq}}
+
+                        {{#each ../cursos}}
+                        {{#ifeq user_iduser ../iduser}}
+                        <br>
+                        <span class="label label-primary">{{../cur_curso}}</span>
+                        {{/ifeq}}{{/each}}
+                    </td>
+                    <td>
+
+                        <!--año lectivo-->
+                        {{#each ../anio}}{{#ifeq ../idanio_lectivo idanio_lectivo}}{{../anio_lectivo}}{{/ifeq}}{{/each}}
+
+                    </td>
+
+                    <td>
+
+                        {{#ifeq fullname 'Administrador'}}
+                        {{#btnEdit ../../user.rol_editar '/users/edit/' ../iduser}}{{/btnEdit}}
+                        {{else}}
+
+                        {{#ifeq ../../sesion_idanio_lectivo ../idanio_lectivo}}
+                        {{#btnEdit ../../user.rol_editar '/users/edit/' ../iduser}}{{/btnEdit}}
+                        {{#ifeq fullname 'Administrador'}}
+
+                        {{else}}
+
+                        {{#btnDelete ../../user.rol_eliminar ../iduser ../user_state }}{{/btnDelete}}
+                        {{/ifeq}}
+                        {{/ifeq}}
+                        {{/ifeq}}
+
+
+
+
+
+
+
+
+
+
+                        <div class="modal fade" id="modal-delete-{{iduser}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header alert-danger">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Desactivar usuario</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        El usuario <code>{{username}}</code> sera desactivado
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Cancelar</button>
+                                        <a href="/users/delete/{{iduser}}" class="btn btn-danger">Continuar</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+                {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(() => {
+        $('[data-toggle="popover"]').popover();
+        $('#table').DataTable({
+            pageLength: 20,
+            order: [[0, 'asc']],
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+    })
+
+</script>

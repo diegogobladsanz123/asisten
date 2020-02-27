@@ -1,0 +1,845 @@
+<div class="col-lg-3 col-md-3 col-sm-12">
+
+    <div class="ui card">
+        <div class="image">
+            <img src="/images/icono-titulacion.png">
+        </div>
+        <div class="content">
+            <a class="header">Matérias</a>
+            {{!-- <div class="meta">
+                                            <span class="date">Al momento no tienes materias asignadas</span>
+                                        </div> --}}
+            <div class="description">
+                <p align="justify">
+                    Previo a la asignación de materias en el curso, es necesario verificar que exista
+                    información actualizada en
+                    los siguientes
+                    módulos:
+                    <ul class="io list">
+                        <li>Profesores</li>
+                        <li>Materias</li>
+                    </ul>
+                    Porcentaje actual de faltas por materia:
+                    <ul class="io list">
+                        <li>{{p_f_m}}%</li>
+                    </ul>
+
+                    <span class="btn btn-primary btn-block btn-flat" data-toggle="modal" onclick="findOrFail(this);"
+                        href='#modal-materias'>Asignar
+                        materia</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+
+
+{{!-- TODO:modal asignar materia --}}
+<div class="modal fade" id="modal-materias">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header alert-info">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Asignar materia</h4>
+            </div>
+            <form action="/curso/materia_has_curso" class="ui form" method="post" id="form_materia_has_curso">
+                <div class="modal-body">
+                    <div class="ui error message"></div>
+                    <div class="two fields">
+
+                        <div class="field">
+                            <label for="">Materia</label>
+                            <select name="materia_idmateria" id="" class="ui fluid search dropdown">
+                                <option value="">Seleccione...</option>
+                                {{#each materias}}
+                                <option value="{{idmaterias}}">{{mat_nombre}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="">Curso</label>
+                            <input type="text" name="" value="{{curso.cur_curso}}" readonly>
+                            <input type="hidden" name="curso_idcurso" value="{{curso.idcurso}}" readonly>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="">Profesor</label>
+                        <select name="profesor_idprofesor" id="" class="ui fluid search selection dropdown">
+                            <option value="">Seleccione...</option>
+                            {{#each funcionarios}}
+                            <option value="{{idfuncionario}}">{{fun_nombres}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="">Total de horas</label>
+                        <input type="number" name="mat_has_curso_horas">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="btn btn-default" id="btn_reset">Restablecer</span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{{!--END modal asignar materia --}}
+
+{{!-- TODO:panel --}}
+<div class="col-lg-9 col-md-9 col-sm-12">
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+            <h4 class="ui dividing header"><i class="fas fa-caret-right"></i>&nbsp;Información del curso</h4>
+
+            <form class="ui form" action="/curso/edit/{{curso.idcurso}}" method="POST">
+                <div class="field">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>Nivel</label>
+                            <select name="nivel_idnivel" id="nivel_idnivel" class="ui fluid dropdown">
+                                {{#each niveles}}
+                                <option value="{{idnivel}}" {{#ifeq idnivel ../curso.nivel_idnivel}} selected {{/ifeq}}>
+                                    {{niv_nivel}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Tutor</label>
+                            <input type="hidden" readonly value="{{tutor.idtutor}}" name="idtutor">
+                            <select name="cur_tutor" id="cur_tutor" class="ui fluid search selection dropdown">
+                                <option value="">Seleccione...</option>
+                                {{#each funcionarios}}
+                                <option value="{{idfuncionario}}"
+                                    {{#ifeq ../tutor.idfuncionario idfuncionario}}selected{{/ifeq}}>{{fun_nombres}}
+                                </option>
+                                {{/each}}
+                            </select>
+
+                        </div>
+                        <div class="field">
+                            <label>Curso</label>
+                            <input type="text" name="cur_curso" id="cur_curso" placeholder="Curso"
+                                value="{{curso.cur_curso}}" disabled>
+
+                            <input type="hidden" name="estado" value="{{curso.cur_estado}}" readonly>
+
+
+                            {{#ifeq curso.cur_estado 0}}
+                            <p class="text-danger"><i class=""></i>El curso esta desactivado. ¿Desea activarlo?
+                                <div class="inline field">
+                                    <div class="ui toggle checkbox">
+                                        <input type="checkbox" tabindex="0" class="hidden" name="activar">
+                                        <label>Si</label>
+                                    </div>
+                                </div>
+                            </p>
+                            {{/ifeq}}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="pull-right" id="buttons_options">
+                    <button class="btn btn-primary" disabled id="btn_update"><i class="fa fa-edit"></i> Actualizar
+                        información</button>
+                    <a href="/curso" class="btn btn-default"><i class="fa fa-home"></i>&nbsp;Regresar a la página
+                        principal</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <div class="ui top attached tabular menu">
+        <a class="item active" data-tab="first">Materias</a>
+        <a class="item" data-tab="second">Alumnos</a>
+
+    </div>
+    <div class="ui bottom attached tab segment active" data-tab="first">
+        <table class="ui blue table">
+            <thead>
+                <tr>
+                    <th>Materia</th>
+                    <th>Profesor</th>
+                    <th>Horas</th>
+                    <th>% faltas</th>
+                    <th>Faltas permitidas</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each mhcs}}
+                <tr id="{{idmaterias_has_curso}}">
+                    <td>{{mat_nombre}}</td>
+                    <td><a href="/funcionario/edit/{{profesor_idprofesor}}" target="_black">{{fun_nombres}}</a></td>
+                    <td>{{mat_has_curso_horas}} </td>
+                    <td>{{../p_f_m}} %</td>
+                    <td>
+                        <span class="badge">{{#percent mat_has_curso_horas ../p_f_m}}{{/percent}}</span>
+                    </td>
+                    <td>
+                        {{!-- TODO: modal eliminar --}}
+                        <div class="modal fade" id="modal-delete-{{idmaterias_has_curso}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header alert-danger">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Quitar asignatura</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Esta seguro que desea quitar la asignatura <code>{{mat_nombre}}</code>.
+                                        <p>- Despues de realizar esta acción, las faltas registradas en dicha asignatura
+                                            no seran contabilizadas.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Cancelar</button>
+                                        <a href="/curso/materia_has_curso/delete/{{idmaterias_has_curso}}"
+                                            class="btn btn-danger"><i class="fa fa-times"></i> Eliminar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- END modal eliminar --}}
+
+
+                        {{!-- TODO:modal editar materia --}}
+                        <div class="modal fade" id="modal_materias_has_curso-{{idmaterias_has_curso}}">
+                            <div class="modal-dialog ">
+                                <div class="modal-content">
+                                    <div class="modal-header alert-info">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">Actualizar</h4>
+                                    </div>
+                                    <form action="/curso/materia_has_curso/update/{{idmaterias_has_curso}}"
+                                        class="ui form" method="post" id="form_materia_has_curso">
+                                        <div class="modal-body">
+                                            <div class="ui error message"></div>
+                                            <div class="two fields">
+
+                                                <div class="field">
+                                                    <label for="">Materia</label>
+
+                                                    <input type="text" name="" value="{{mat_nombre}}" disabled>
+                                                    <input type="hidden" name="materia_idmateria" value="{{idmaterias}}"
+                                                        readonly>
+                                                </div>
+                                                <div class="field">
+                                                    <label for="">Curso</label>
+                                                    <input type="text" name="" value="{{../curso.cur_curso}}" disabled>
+                                                    <input type="hidden" name="curso_idcurso"
+                                                        value="{{../curso.idcurso}}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label for="">Profesor</label>
+                                                <select name="profesor_idprofesor" id=""
+                                                    class="ui fluid search selection dropdown">
+                                                    <option value="">Seleccione...</option>
+                                                    {{#each ../funcionarios}}
+                                                    <option value="{{idfuncionario}}"
+                                                        {{#ifeq ../profesor_idprofesor idfuncionario}}selected{{/ifeq}}>
+                                                        {{fun_nombres}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label for="">Total de horas</label>
+                                                <input type="number" name="mat_has_curso_horas"
+                                                    value="{{mat_has_curso_horas}}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <span class="btn btn-default" id="btn_reset">Restablecer</span>
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary"><i
+                                                    class="fa fa-save"></i>&nbsp;Guardar</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {{!--END modal asignar materia --}}
+
+                        {{#btnDelete ../user.rol_eliminar idmaterias_has_curso mat_state}}{{/btnDelete}}
+                        <span class="btn btn-info btn-flat btn-xs" data-toggle="modal"
+                            href="#modal_materias_has_curso-{{idmaterias_has_curso}}" id="{{idmaterias_has_curso}}"
+                            onclick="findOrFail(this);"><i class="fa fa-edit"></i></span>
+                    </td>
+
+                </tr>
+                {{/each}}
+            </tbody>
+            {{!-- <tfoot>
+                                <tr>
+                                    <th>Materia</th>
+                                    <th>Profesor</th>
+                                    <th>Horas</th>
+                                    <th>%faltas</th>
+                                    <th>Faltas permitidas</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot> --}}
+        </table>
+    </div>
+    <!--TODO: TAB ALUMNOS-->
+
+    <div class="ui bottom attached tab segment" data-tab="second">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <a class="btn btn-primary" data-toggle="modal" href='#modal-añadir-alumnos'><i class="fa fa-plus"></i>
+                    Añadir alumnos</a>
+                <a class="btn btn-primary" data-toggle="modal" href='#modal-mover-alumnos'><i
+                        class="fa fa-exchange-alt"></i> Mover alumnos</a>
+                <form action="/alumnos/mover" method="POST" class="ui form" id="frm-mover-alumno">
+
+                    <table class="ui table very compact selectable celled" id="tabla-alumnos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Alumno</th>
+                                <th>Curso anterior</th>
+                                <th class="text-center">
+                                    <input type="checkbox" class="checkAll" name="checkAll" />
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each alumnos}}
+                            <tr {{#ifeq alu_estado 0}} class="negative" title="Alumno inactivo" {{/ifeq}}>
+                                <td>{{idalumno}}</td>
+                                <td>
+                                    <a href="/alumnos/ficha/{{idalumno}}" {{#ifeq alu_estado 0}} class="text-danger"
+                                        {{/ifeq}}><i class="fa fa-arrow-alt-circle-right"></i>
+                                        {{alu_apellidos_nombres}}</a>
+                                </td>
+                                <td>
+                                    {{#ifeq cur_ant null}}
+
+                                    {{else}}
+                                    <a class="ui tag label disabled">{{../cur_ant}}</a>
+                                    {{/ifeq}}
+
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="" value="{{idalumno}}" name="id_s[]" />
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger btn-xs" title="Quitar" data-toggle="modal"
+                                        href='#modal_quitar_{{idalumno}}'><i class="fa fa-times"></i></a>
+
+                                    <div class="modal fade" id="modal_quitar_{{idalumno}}">
+                                        <form action=""></form>
+                                        <form action="/alumnos/quitarAlumnoDelCurso"
+                                            id="quitarAlumnoDelCurso_{{idalumno}}" method="POST">
+
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title">
+                                                            <div class="ui labeled input">
+                                                                <div class="ui label">
+                                                                    Quitar alumno, ID:
+                                                                </div>
+                                                                <input type="text" placeholder="ID alumno"
+                                                                    value="{{idalumno}}" readonly name="idalumno"
+                                                                    id="idalumno_{{idalumno}}">
+                                                            </div>
+
+                                                            <input type="hidden" placeholder="ID alumno"
+                                                                value="{{idmatricula}}" readonly name="idmatricula">
+
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        ¿Esta seguro que desea quitar el alumno
+                                                        <b>{{alu_apellidos_nombres}}</b>?
+                                                        <br>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">No</button>
+
+
+                                                        <button type="submit" class="btn btn-danger">Si</button>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+                            {{/each}}
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td class="text-right">
+
+
+                                </td>
+                                <td></td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        </tbody>
+                    </table>
+                    <!--TODO:modal mover alumnos-->
+                    <div class="modal fade" id="modal-mover-alumnos">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Mover Alumnos</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="field">
+                                        <label>Por favor seleccione el curso al cual desea mover:</label>
+                                        <input type="hidden" name="cur_ant" value="{{curso.cur_curso}}" readonly>
+                                        <select class="ui search dropdown" name="idcurso">
+                                            <option value="">Seleccione el curso...</option>
+                                            {{#each cursos}}
+                                            <option value="{{idcurso}}">{{cur_curso}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                    <div class="ui error message"></div>
+                                    <script>
+                                        $(() => {
+                                            $('#frm-mover-alumno').form({
+                                                fields: {
+                                                    idcurso: {
+                                                        identifier: 'idcurso',
+                                                        rules: [{ type: 'empty', prompt: 'Seleccione el curso.' }]
+                                                    }
+                                                }, onSuccess: ((e) => {
+                                                    e.submit();
+                                                })
+                                            }).submit((e) => {
+                                                e.preventDefault();
+                                            })
+                                        })
+
+
+                                    </script>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Continuar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END:modal mover alumnos-->
+                </form>
+            </div>
+            <!--TODO:modal añadir alumnos-->
+            <div class="modal fade" id="modal-añadir-alumnos">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Añadir alumnos al curso <code>{{curso.cur_curso}}</code></h4>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div role="tabpanel">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active">
+                                        <a href="#home" aria-controls="home" role="tab" data-toggle="tab"
+                                            onclick="limpiar();">Obtener lista por curso</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#tab" aria-controls="tab" role="tab" data-toggle="tab"
+                                            onclick="limpiar();">Alumnos
+                                            nuevos</a>
+                                    </li>
+
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="home">
+                                        <br>
+                                        <select class="ui search dropdown" name="idcurso" id="slct_idanio_lectivo">
+                                            <option value="">Año lectivo</option>
+                                            {{#each anioLecivos}}
+                                            <option value="{{idanio_lectivo}}">{{anio_lectivo}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <select class="ui search dropdown" name="idcurso" id="slct_idcurso">
+                                            <option value="">Curso</option>
+                                            {{#each cursos}}
+                                            <option value="{{idcurso}}">{{cur_curso}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <span class="btn btn-primary btn-xs" title="Buscar..." onclick="obtener()"
+                                            id="search_icon"><i class="fa fa-search"></i></span>
+                                        <span class="btn btn-default btn-xs" onclick="limpiar();" title="Limpiar lista"
+                                            onclick="obtener()" id="search_icon">Limpiar</span>
+                                        <form action="/alumnos/asignarCurso" class="ui form" id="frm_alumnos"
+                                            method="POST">
+                                            <input type="hidden" name="idcurso" value="{{curso.idcurso}}" readonly>
+                                            <input type="hidden" name="cur_ant_agragar" value="" readonly
+                                                id="cur_ant_agragar">
+                                            <table class="ui table selectable small">
+                                                <thead>
+                                                    <tr>
+                                                        <th>id</th>
+                                                        <th>Nombre</th>
+                                                        <th>Curso ant.</th>
+                                                        <th>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="lista_alumnos">
+                                                </tbody>
+                                            </table>
+                                            <div class="text-right"><button type="submit"
+                                                    class="btn btn-primary">Registrar</button>
+                                            </div>
+                                        </form>
+                                        <!--TODO: script agregar alumnos a la tabla -->
+                                        <script>
+                                            $('#slct_idanio_lectivo').change(() => {
+                                                let table = document.getElementById('lista_alumnos');
+                                                table.innerHTML = "";
+                                                $('#cur_ant_agragar').val('');
+                                            })
+                                            $('#slct_idcurso').change(() => {
+                                                let table = document.getElementById('lista_alumnos');
+                                                table.innerHTML = "";
+                                                $('#cur_ant_agragar').val('');
+                                                $('#cur_ant_agragar').val($('#slct_idcurso option:selected').text());
+                                            })
+                                            function obtener() {
+                                                let text = $('#slct_idcurso option:selected').text();
+                                                if (text != 'Curso') {
+                                                    $('#cur_ant_agragar').val($('#slct_idcurso option:selected').text());
+                                                }
+
+
+                                                let idanio_lectivo = $('#slct_idanio_lectivo').val();
+                                                let idcurso = $('#slct_idcurso').val();
+                                                $.ajax({
+                                                    beforeSend: function () {
+                                                        //$('#search_icon').addClass('ui search icon');
+                                                    },
+                                                    url: `/alumnos/getAll/${idanio_lectivo}/${idcurso}`,
+                                                    type: 'get',
+                                                    success: function (res) {
+                                                        addLista(res);
+                                                    },
+                                                    error: (jqXHR, textStatus, errorThrown) => {
+                                                        console.log(`-> error: ${errorThrown} `);
+                                                    }, complete: function (jqXHR, state, err) {
+                                                    }
+                                                })
+                                            }
+                                            function deleteRow(id) {
+                                                let item = document.getElementById(`fila_${id}`);
+                                                item.remove();
+                                            }
+                                            function limpiar() {
+                                                let table = document.getElementById('lista_alumnos');
+                                                table.innerHTML = "";
+                                            }
+                                            function addLista(alumnos) {
+
+                                                let table = document.getElementById('lista_alumnos');
+                                                table.innerHTML = "";
+
+                                                for (let i = 0; i < alumnos.length; i++) {
+                                                    let row = `
+                                                                                                                <tr id="fila_${alumnos[i].idalumno}">
+                                                                                                                        <td>
+                                                                                                                            ${alumnos[i].idalumno}
+                                                                                                                            <input type="hidden" readonly value="${alumnos[i].idalumno}" name="idalumno[]">
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            ${alumnos[i].alu_apellidos_nombres}                                                                                
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            ${alumnos[i].cur_ant}                                                                                                                            
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            <span class="btn btn-warning btn-xs" title="Quitar" 
+                                                                                                                                    onclick="deleteRow(${alumnos[i].idalumno})"><i
+                                                                                                                                    class="fa fa-minus"></i></span>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                `;
+                                                    table.innerHTML += row;
+                                                }
+
+
+                                            }
+
+                                        </script>
+                                        <!--TODO: script agregar alumnos a la tabla -->
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="tab">
+                                        &nbsp;
+                                        <form action="/alumnos/asignarCurso" class="ui form" id="frm_alumnos_nuevos"
+                                            method="POST">
+                                            <input type="hidden" name="idcurso" value="{{curso.idcurso}}" readonly>
+                                            <input type="hidden" name="cur_ant_agragar" value="" readonly
+                                                id="cur_ant_agragar">
+                                            <table class="ui table selectable small">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID.</th>
+                                                        <th>CI.</th>
+                                                        <th>Alumno</th>
+                                                        <th>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="lista_alumnos_nuevos">
+                                                    {{#each sinMatricula}}
+                                                    <tr>
+                                                        <td>{{idalumno}}</td>
+                                                        <td>{{alu_cedula}}</td>
+                                                        <td>{{alu_apellidos_nombres}}</td>
+                                                        <td>
+                                                            <input type="checkbox" name="idalumno[]"
+                                                                value="{{idalumno}}">
+                                                        </td>
+                                                    </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                            <button type="submit" class="btn btn-primary pull-right">Registrar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--END: TAB ALUMNOS-->
+
+
+
+</div>
+{{!-- END->panel --}}
+</div>
+</div>
+
+
+
+
+
+
+<script>
+
+    var btn_unlock = `<span class="btn btn-default" id="btn_unlock" title="Desbloquear"><i class="fas fa-unlock"></i></span>`;
+    var btn_lock = `<span class="btn btn-default" id="btn_lock" title="Bloquear"><i class="fas fa-lock"></i></span>`;
+    var div_buttons = $('#buttons_options');
+    div_buttons.append(btn_unlock, btn_lock);
+
+    $(document).ready(function () {
+        $('select.dropdown').dropdown();
+        $('#btn_lock').hide();
+        $('#example4').progress('increment');
+        $('.ui.checkbox').checkbox();
+        $('.menu .item')
+            .tab()
+            ;
+
+
+        /* TODO: cheack all checkBoxes*/
+        $('.checkAll').on('click', function () {
+            $(this).closest('table').find('tbody :checkbox')
+                .prop('checked', this.checked)
+                .closest('tr').toggleClass('selected', this.checked);
+        });
+        $('.checkAll2').on('click', function () {
+            $(this).closest('table').find('tbody :checkbox')
+                .prop('checked', this.checked)
+                .closest('tr').toggleClass('selected', this.checked);
+        });
+
+        $('tbody :checkbox').on('click', function () {
+            $(this).closest('tr').toggleClass('selected', this.checked); //Classe de seleção na row
+        });
+        $('#tabla-alumnos').dataTable({
+            "pageLength": 60
+        });
+        /*END: cheack all checkBoxes*/
+    })
+
+
+    function findOrFail(e) {
+        $('#form_materia_has_curso').form('reset');
+        $('#materias_has_curso').form('reset');
+        $.ajax({
+            beforeSend: function () {
+                console.log('sending');
+            },
+            url: `/curso/materia_has_curso/get/${e.id}`,
+            type: 'get',
+            success: function (res) {
+                console.log(res.materias_idmaterias);
+
+            },
+            error: function (jqXHR, state, err) {
+                console.log(`-> error ${err}`);
+            },
+            complete: function (jqXHR, state, err) {
+                console.log(`-> complete ${err}`);
+            }
+        });
+    }
+
+
+    $('#btn_unlock').click(function () {
+        $('#cur_curso').removeAttr('disabled');
+
+
+        $('#btn_unlock').hide();
+        $('#btn_lock').show();
+        $('#btn_update').removeAttr('disabled');
+    });
+    $('#btn_lock').click(function () {
+        $("#cur_curso").prop('disabled', true);
+        $("#cur_tutor").prop('disabled', true);
+        $('#btn_update').prop('disabled', true);
+        $('#btn_unlock').show();
+        $('#btn_lock').hide();
+    });
+
+
+    /*TODO: modal asignar materia-- */
+    $('#btn_reset').click(() => {
+        $('#form_materia_has_curso').form('reset');
+    })
+
+    $(function () {
+        $('#form_materia_has_curso').form({
+            materia_idmateria: {
+                identifier: 'materia_idmateria',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Por favor seleccione la materia.'
+                    }
+                ]
+            },
+            mat_has_curso_horas: {
+                identifier: 'mat_has_curso_horas',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingresar el total de horas'
+                    }
+                ]
+            },
+            curso_idcurso: {
+                identifier: 'curso_idcurso',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Seleccione el curso.'
+                    }
+                ]
+            },
+            profesor_idprofesor: {
+                identifier: 'profesor_idprofesor',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Seleccione el profesor'
+                    }
+                ]
+            }
+
+        })
+    })
+    /*END modal asignar materia-- */
+
+
+    /*TODO: validacion modal editar*/
+    $('#btn_reset1').click(() => {
+        $('#materias_has_curso').form('reset');
+    })
+
+    $(function () {
+        $('#materias_has_curso').form({
+            materia_idmateria: {
+                identifier: 'materia_idmateria',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Por favor seleccione la materia.'
+                    }
+                ]
+            },
+            mat_has_curso_horas: {
+                identifier: 'mat_has_curso_horas',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Ingresar el total de horas'
+                    }
+                ]
+            },
+            curso_idcurso: {
+                identifier: 'curso_idcurso',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Seleccione el curso.'
+                    }
+                ]
+            },
+            profesor_idprofesor: {
+                identifier: 'profesor_idprofesor',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Seleccione el profesor'
+                    }
+                ]
+            }
+
+        })
+    })
+    /*END modal asignar materia-- */
+
+
+
+</script>

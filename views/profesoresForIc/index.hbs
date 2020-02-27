@@ -1,0 +1,576 @@
+<div class="ui dividing header">
+    Profesores
+</div>
+
+
+<div class="ui top attached tabular menu">
+    <a class="item active" data-tab="first">Listado</a>
+    <a class="item" data-tab="second">Novedades/Atrasos</a>
+
+</div>
+<div class="ui bottom attached tab segment active" data-tab="first">
+
+    <a class="btn btn-primary pull-right" data-toggle="modal" href='#modal-id-1'>Info.</a>
+    <div class="modal fade" id="modal-id-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Información de <b>Listado</b></h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        A continuación se presenta un listado general de profesores, si usted es Inspector de curso
+                        únicamente va a observar los docentes involucrados
+                        en los cursos que le corresponde.
+                    </p>
+                    <b>¿Como registrar una novedad?</b>
+                    <p>
+                        Para hacerlo tiene tres opciónes:
+                    </p>
+                    <ul>
+                        <li><b>Novedad/Hora</b> Para notificar una falta por hora</li>
+                        <!--Antes de hacerlo es importante que verifíque el nombre del docente y la materia, esto porque a un docente le puede corresponder mas de una materia.-->
+                        <li><b>Novedad/Día</b> Para notificar una falta por día</li>
+                        <li><b>Atraso/Hora</b> Para notificar un atraso</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="ui table selectable compact" id="table_profesores">
+        <thead>
+            <tr>
+                <th>Nombres</th>
+                <th>Curso</th>
+                <th>Materia</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="table_body">
+            {{#each profesores}}
+            <tr>
+
+                <td>{{#ifeq ../user.idrol 1}}<a
+                        href="/funcionario/edit/{{../idfuncionario}}">{{../fun_nombres}}</a>{{else}}{{../fun_nombres}}{{/ifeq}}
+                </td>
+                <td>{{cur_curso}}</td>
+                <td>{{mat_nombre}}</td>
+                <td>
+
+                    {{#ifeq ../user.idrol 1}}
+
+                    {{else}}
+
+                    {{#ifeq ../../anio_state 2}}
+                    <a class="btn btn-primary btn-xs" disabled data-toggle="modal" href=''
+                        title="El año lectivo esta finalizado."><i class="fa fa-plus"></i>
+                        FALTA / ATRASO</a>
+                    {{else}}
+                    <a class="btn btn-primary btn-xs" data-toggle="modal"
+                        href='#modal-falta-{{../idfuncionario}}-{{../idcurso}}-{{../idmaterias}}'
+                        title="Registrar novedad"><i class="fa fa-plus"></i>
+                        NOVEDAD / ATRASO</a>
+                    {{/ifeq}}
+
+                    {{/ifeq}}
+
+
+
+
+                    <!--TODO:MODAL-FALTA-->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="modal fade" id="modal-falta-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">Registrar novedad</h4>
+                                        </div>
+
+
+                                        <!-- Custom Tabs -->
+                                        <div class="nav-tabs-custom">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a
+                                                        href="#tab_dia_{{idfuncionario}}_{{idcurso}}_{{idmaterias}}"
+                                                        data-toggle="tab">Novedad/Día</a> </li>
+                                                <li><a href="#tab_hora_{{idfuncionario}}_{{idcurso}}_{{idmaterias}}"
+                                                        data-toggle="tab">Novedad/Hora</a>
+                                                </li>
+                                                <li><a href="#tab_atraso_hora_{{idfuncionario}}_{{idcurso}}_{{idmaterias}}"
+                                                        data-toggle="tab">Atraso/Hora</a></li>
+
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div class="tab-pane active"
+                                                    id="tab_dia_{{idfuncionario}}_{{idcurso}}_{{idmaterias}}">
+                                                    <!--TODO: FALTAS POR DIA-->
+                                                    <form action="/profesores/setFalta/{{idfuncionario}}"
+                                                        class="ui form"
+                                                        id="frm-falta-dia-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}"
+                                                        method="POST">
+                                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                            <div class="ui error message"></div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <label for="">Profesor</label>
+                                                                <input type="text" value="{{fun_nombres}}"
+                                                                    name="fun_nombres"
+                                                                    id="fun_nombres_{{idfuncionario}}">
+                                                                <input type="hidden" value="{{idfuncionario}}"
+                                                                    name="idprofesor" id="idprofesor_{{idprofesor}}">
+                                                                <input type="hidden" value="1" name="ina_tipo" readonly>
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Fecha</label>
+                                                                    <input type="date" name="ina_fecha"
+                                                                        id="ina_fecha_{{idprofesor}}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Motivo</label>
+                                                                    <input type="text" name="justificado_coment" id="">
+                                                                </div>
+                                                            </div>
+                                                        </div><br>
+                                                        <div class="modal-footer">
+                                                            <button type="submit"
+                                                                class="btn btn-primary">Guardar</button>
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Cerrar</button>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            $(() => {
+                                                                $(`#frm-falta-dia-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}`).form({
+                                                                    fields: {
+                                                                        fun_nombres: {
+                                                                            identifier: 'fun_nombres',
+                                                                            rules: [{ type: 'empty', prompt: 'El nombre del profesor es requerido' }]
+                                                                        },
+                                                                        idfuncionario: {
+                                                                            identifier: 'idfuncionario',
+                                                                            rules: [{ type: 'empty', prompt: 'El id del profesor es requerido' }]
+                                                                        },
+                                                                        ina_fecha: {
+                                                                            identifier: 'ina_fecha',
+                                                                            rules: [{ type: 'empty', prompt: 'Seleccione la fecha' }]
+                                                                        },
+                                                                        justificado_coment: {
+                                                                            identifier: 'justificado_coment',
+                                                                            rules: [{ type: 'empty', prompt: 'Por favor ingrese el motivo' }]
+                                                                        }
+                                                                    },
+                                                                    onSuccess: ((e) => {
+                                                                        e.submit();
+                                                                    })
+                                                                }).submit((e) => {
+                                                                    e.preventDefault();
+                                                                })
+                                                            })
+                                                        </script>
+
+                                                    </form>
+                                                    <!--END: FALTAS POR DIA-->
+                                                </div>
+                                                <!-- /.tab-pane -->
+                                                <div class="tab-pane"
+                                                    id="tab_hora_{{idfuncionario}}_{{idcurso}}_{{idmaterias}}">
+                                                    <!--TODO: FALTAS POR HORA-->
+                                                    <form action="/profesores/setFalta/{{idfuncionario}}"
+                                                        class="ui form"
+                                                        id="frm-falta-hora-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}"
+                                                        method="POST">
+                                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                            <div class="ui error message"></div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <label for="">Profesor</label>
+                                                                <input type="text" value="{{fun_nombres}}"
+                                                                    name="fun_nombres"
+                                                                    id="fun_nombres_{{idfuncionario}}" readonly>
+                                                                <input type="hidden" value="{{idfuncionario}}"
+                                                                    name="idprofesor">
+                                                                <input type="hidden" value="2" name="ina_tipo"
+                                                                    id="tipo_{{idfuncionario}}" readonly>
+                                                            </div>
+                                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                                                <label for="">Curso:</label>
+                                                                <input type="hidden" value="{{idcurso}}" name="idcurso"
+                                                                    id="" readonly>
+                                                                <input type="text" value="{{cur_curso}}"
+                                                                    name="cur_curso" id="" readonly>
+                                                            </div>
+                                                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                                                <label for="">Materia</label>
+                                                                <input type="text" value="{{mat_nombre}}"
+                                                                    name="mat_nombre" id="mat_nombre_{{idfuncionario}}"
+                                                                    readonly>
+                                                                <input type="hidden" value="{{idmaterias}}"
+                                                                    name="idmaterias" id="idmaterias_{{idprofesor}}">
+
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Fecha</label>
+                                                                    <input type="date" name="ina_fecha"
+                                                                        id="fecha_{{idfuncionario}}">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Hora.</label>
+                                                                    <select name="ina_hora"
+                                                                        id="slct_hora_{{idfuncionario}}"
+                                                                        class="ui fluid dropdown">
+                                                                        <option value="" selected>Seleccione...</option>
+                                                                        <option value="1ra. Hora.">1ra. Hora.</option>
+                                                                        <option value="2da. Hora.">2da. Hora.</option>
+                                                                        <option value="3ra. Hora.">3ra. Hora.</option>
+                                                                        <option value="4ta. Hora.">4ta. Hora.</option>
+                                                                        <option value="5ta. Hora.">5ta. Hora.</option>
+                                                                        <option value="6ta. Hora.">6ta. Hora.</option>
+                                                                        <option value="7ta. Hora.">7ta. Hora.</option>
+                                                                        <option value="8va. Hora.">8va. Hora.</option>
+                                                                        <option value="9na. Hora.">9na. Hora.</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Comentario</label>
+                                                                    <input type="text" name="justificado_coment" id="">
+                                                                </div>
+                                                            </div>
+
+                                                        </div><br>
+                                                        <div class="modal-footer">
+                                                            <button type="submit"
+                                                                class="btn btn-primary">Guardar</button>
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Cerrar</button>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            $(() => {
+                                                                $(`#frm-falta-hora-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}`).form({
+                                                                    fields: {
+                                                                        fun_nombres: {
+                                                                            identifier: 'fun_nombres',
+                                                                            rules: [{ type: 'empty', prompt: 'El nombre del profesor es requerido' }]
+                                                                        },
+                                                                        idfuncionario: {
+                                                                            identifier: 'idfuncionario',
+                                                                            rules: [{ type: 'empty', prompt: 'El id del profesor es requerido' }]
+                                                                        },
+                                                                        ina_hora: {
+                                                                            identifier: 'ina_hora',
+                                                                            rules: [{ type: 'empty', prompt: 'La hora es requerida' }]
+                                                                        },
+                                                                        ina_fecha: {
+                                                                            identifier: 'ina_fecha',
+                                                                            rules: [{ type: 'empty', prompt: 'Seleccione la fecha' }]
+                                                                        },
+                                                                        justificado_coment: {
+                                                                            identifier: 'justificado_coment',
+                                                                            rules: [{ type: 'empty', prompt: 'Ingrese un comentario...' }]
+                                                                        },
+                                                                    }, onSuccess: ((e) => {
+                                                                        e.submit();
+                                                                    })
+                                                                }).submit((e) => {
+                                                                    e.preventDefault();
+                                                                })
+                                                            })
+                                                        </script>
+
+                                                    </form>
+                                                    <!--END: FALTAS POR HORA-->
+                                                </div>
+                                                <div class="tab-pane"
+                                                    id="tab_atraso_hora_{{idfuncionario}}_{{idcurso}}_{{idmaterias}}">
+                                                    <!--TODO: atraso POR HORA-->
+                                                    <form action="/profesores/setFalta/{{idfuncionario}}"
+                                                        class="ui form"
+                                                        id="frm-atraso-hora-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}"
+                                                        method="POST">
+                                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                            <div class="ui error message"></div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <label for="">Profesor</label>
+                                                                <input type="text" value="{{fun_nombres}}"
+                                                                    name="fun_nombres"
+                                                                    id="fun_nombres_{{idfuncionario}}">
+                                                                <input type="hidden" value="{{idfuncionario}}"
+                                                                    name="idprofesor">
+                                                                <input type="hidden" value="3" name="ina_tipo"
+                                                                    id="tipo_{{idfuncionario}}" readonly>
+                                                            </div>
+                                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                                                <label for="">Curso:</label>
+                                                                <input type="hidden" value="{{idcurso}}" name="idcurso"
+                                                                    id="" readonly>
+                                                                <input type="text" value="{{cur_curso}}"
+                                                                    name="cur_curso" id="" readonly>
+                                                            </div>
+                                                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                                                <label for="">Materia</label>
+                                                                <input type="text" value="{{mat_nombre}}"
+                                                                    name="mat_nombre" id="mat_nombre_{{idfuncionario}}"
+                                                                    readonly>
+                                                                <input type="hidden" value="{{idmaterias}}"
+                                                                    name="idmaterias" id="idmaterias_{{idprofesor}}">
+
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Fecha</label>
+                                                                    <input type="date" name="ina_fecha"
+                                                                        id="fecha_{{idfuncionario}}">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                                                <div class="field">
+                                                                    <label for="">Hora.</label>
+                                                                    <select name="ina_hora"
+                                                                        id="slct_hora_{{idfuncionario}}"
+                                                                        class="ui fluid dropdown">
+                                                                        <option value="" selected>Seleccione...</option>
+                                                                        <option value="1ra. Hora.">1ra. Hora.</option>
+                                                                        <option value="2da. Hora.">2da. Hora.</option>
+                                                                        <option value="3ra. Hora.">3ra. Hora.</option>
+                                                                        <option value="4ta. Hora.">4ta. Hora.</option>
+                                                                        <option value="5ta. Hora.">5ta. Hora.</option>
+                                                                        <option value="6ta. Hora.">6ta. Hora.</option>
+                                                                        <option value="7ta. Hora.">7ta. Hora.</option>
+                                                                        <option value="8va. Hora.">8va. Hora.</option>
+                                                                        <option value="9na. Hora.">9na. Hora.</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                        </div><br>
+                                                        <div class="modal-footer">
+                                                            <button type="submit"
+                                                                class="btn btn-primary">Guardar</button>
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Cerrar</button>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            $(() => {
+                                                                $(`#frm-atraso-hora-{{idfuncionario}}-{{idcurso}}-{{idmaterias}}`).form({
+                                                                    fields: {
+                                                                        fun_nombres: {
+                                                                            identifier: 'fun_nombres',
+                                                                            rules: [{ type: 'empty', prompt: 'El nombre del profesor es requerido' }]
+                                                                        },
+                                                                        idfuncionario: {
+                                                                            identifier: 'idfuncionario',
+                                                                            rules: [{ type: 'empty', prompt: 'El id del profesor es requerido' }]
+                                                                        },
+                                                                        ina_hora: {
+                                                                            identifier: 'ina_hora',
+                                                                            rules: [{ type: 'empty', prompt: 'La hora es requerida' }]
+                                                                        },
+                                                                        ina_fecha: {
+                                                                            identifier: 'ina_fecha',
+                                                                            rules: [{ type: 'empty', prompt: 'Seleccione la fecha' }]
+                                                                        },
+                                                                    }, onSuccess: ((e) => {
+                                                                        e.submit();
+                                                                    })
+                                                                }).submit((e) => {
+                                                                    e.preventDefault();
+                                                                })
+                                                            })
+                                                        </script>
+
+                                                    </form>
+                                                    <!--END: atraso POR HORA-->
+                                                </div>
+                                                <!-- /.tab-pane -->
+
+                                            </div>
+                                            <!-- /.tab-content -->
+                                        </div>
+                                        <!-- nav-tabs-custom -->
+
+
+                                        <!-- nav-tabs-custom -->
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+</div>
+
+<!--END:MODAL-FALTA-->
+
+
+
+
+</td>
+</tr>
+{{/each}}
+</tbody>
+
+</table>
+</div>
+<div class="ui bottom attached tab segment" data-tab="second">
+
+    <a class="btn btn-primary pull-right" data-toggle="modal" href='#modal-id'>Info.</a>
+    <div class="modal fade" id="modal-id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Información de Novedades/Atrasos</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        En este aparado tiene una vista general del las novedades registradas por los Inspectores de
+                        curso,
+                        la información puede ser organizada por: Tipo, fecha, orden ascendente o descendente.
+                    </p>
+
+                    <p>
+                        Si desea obtener las novedades por inspector, es necesario que
+                        utilice la herramienta del panel lateral izquierdo <a href="/inspeccion/registro_asistencia"
+                            class="text-green"><i class="fa fa-angle-right"></i>Consulta de novedades</a>
+                    </p>
+                    <p>
+                        <b>Simbología:</b>
+                        <ul>
+                            <li><span class="badge bg-blue">A</span> Atraso</li>
+                            <li><span class="badge bg-red">F</span> Falta todo el día</li>
+                            <li><span class="badge bg-warning">F</span>Falta por hora</li>
+                        </ul>
+
+
+
+
+
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{> tableInasistenciaFuncionario}}
+</div>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(() => {
+        $('#table_profesores').dataTable({
+            'pageLength': 25,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+        $('#table_inasistencia').DataTable({
+            "pageLength": 15,
+            'order': [[0, 'desc']],
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+        $('.ui.checkbox').checkbox();
+
+        $('select.dropdown').dropdown();
+        $('.menu .item')
+            .tab()
+            ;
+    })
+    function toggleCheckbox(element, id) {
+        if (element.checked) {
+
+            $(`#camposExtra_${id}`).append(camposExtraInasistencia);
+        } else {
+            $(`#camposExtra_${id}`).empty();
+        }
+    }
+
+
+    function clearForm(id) {
+        $(`#frm-detail-${id}`).form('reset');
+    }
+
+    let todoeldia =
+        `
+              
+    `;
+
+    //TODO: class añadir inasistencia
+
+
+    let camposExtraInasistencia =
+        `
+        
+                                                        
+`;
+
+
+
+
+</script>
