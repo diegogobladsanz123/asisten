@@ -16,7 +16,7 @@
     "express": "~4.16.1",
     "express-mysql-session": "^2.1.0",
     "express-session": "^1.16.2",
-    "handlebars": "^4.5.1",
+    "handlebars": "^4.5.3",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
     "moment": "^2.24.0",
